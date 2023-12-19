@@ -1,19 +1,25 @@
 import { useStoreMap } from "effector-solid";
 import { For, onMount, useContext } from "solid-js";
 
-import { Loader, Note, Store } from "..";
+import { Input, Loader, Note, Store } from "..";
 
 export default function() {
   const store = useContext(Store.StoreContext);
   const actions = useContext(Store.ActionContext);
 
-  const loadableNotes = useStoreMap<Store.T, Loader.T<Note.T[]>>(store, store => store.notes);
+  const notes = useStoreMap<Store.T, Loader.T<Store.Notes>>(store, store => store.notes);
 
-  onMount(() => actions.loadNotes());
+  onMount(() => actions.init());
 
-  return <Loader.JSX loadable={loadableNotes}>{notes =>
-    <For each={notes}>{({ title }) =>
-      <h2>{title}</h2>
-    }</For>
-  }</Loader.JSX>
-}
+  return <Loader.JSX loadable={notes}>
+    {notes => <>
+      <For each={notes().items}>{note =>
+          <h2 onClick={() => actions.selectNote(note.id)}>
+            {notes().selected === note.id ? ">" : " "} {note.title}
+          </h2>
+      }</For>
+
+      <Input.JSX onSubmit={input => actions.addNote(Note.make(input))} />
+    </>}
+  </Loader.JSX>;
+};

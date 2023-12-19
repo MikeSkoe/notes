@@ -5,7 +5,7 @@ import { T } from "./loader";
 
 interface LoaderCompProps<A> {
   loadable: Accessor<T<A>>,
-  children: (item: A) => JSX.Element;
+  children: (item: Accessor<A>) => JSX.Element;
 }
 
 export default function <A>({ loadable, children }: LoaderCompProps<A>) {
@@ -13,6 +13,6 @@ export default function <A>({ loadable, children }: LoaderCompProps<A>) {
     when={Loader.getWithDefault(loadable(), null)}
     fallback={<div>...loading</div>}
   >
-    {data => children(data())}
+    {children}
   </Show>
 }

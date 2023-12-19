@@ -21,6 +21,7 @@ export class InMemory<Item extends Id.WithId> implements Service<Item> {
     };
 
     public async getAll(): Promise<Item[]> {
+        await new Promise(res => setTimeout(res, 1000));
         return [...this.items.values()];
     }
 }

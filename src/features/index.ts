@@ -1,5 +1,6 @@
 export * as Result from "./result";
 export * as Loader from "./loader";
+export * as Input from "./input";
 export * as Id from "./id";
 export * as DB from "./db";
 export * as Note from "./note";

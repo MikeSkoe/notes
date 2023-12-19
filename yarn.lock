@@ -297,6 +297,11 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
+"@effector/redux-devtools-adapter@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@effector/redux-devtools-adapter/-/redux-devtools-adapter-0.2.0.tgz#d0aa4daedcbaa6f28db536a2e69400535a946199"
+  integrity sha512-zSucKMLWImvFtD6nQIT6EO5pxdXdqvUkmUTvps1QfFvUzps/6wScBz9k28TsnSIebvfL+K+fLphEK2VoQ7r+cw==
+
 "@esbuild/android-arm64@0.19.9":
   version "0.19.9"
   resolved "https://registry.yarnpkg.com/@esbuild/android-arm64/-/android-arm64-0.19.9.tgz#683794bdc3d27222d3eced7b74cad15979548031"

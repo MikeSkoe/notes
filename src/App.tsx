@@ -7,4 +7,4 @@ function App() {
   </Store.Provider>
 }
 
-export default App
+export default App;
