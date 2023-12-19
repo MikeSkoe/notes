@@ -2,7 +2,11 @@ import { Id, Note } from "..";
 
 export type T = Id.WithId & Id.WithParents<Note.T> & { title: string; };
 
-export const EMPTY: T = { id: Id.make(), title: "empty paragraph", parents: { [Note.UNSORTED.id]: 1 } };
+export const EMPTY: T = {
+    id: Id.make(),
+    title: "empty paragraph",
+    parents: { [Note.UNSORTED.id]: 1 },
+};
 
 export const make = (
     title: string,

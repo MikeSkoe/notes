@@ -7,7 +7,7 @@ export default function() {
   const store = useContext(Store.StoreContext);
   const actions = useContext(Store.ActionContext);
 
-  const notes = useStoreMap<Store.T, Loader.T<Store.Notes>>(store, store => store.notes);
+  const notes = useStoreMap<Store.Root, Loader.T<Store.Notes>>(store, store => store.notes);
 
   onMount(() => actions.init());
 

@@ -4,6 +4,7 @@ export interface Service<Item extends Id.WithId> {
     set: (item: Item) => Promise<void>;
     get: (id: Item["id"]) => Promise<Item>;
     getAll: () => Promise<Item[]>;
+    delete: (id: Item["id"]) => Promise<void>;
 }
 
 export interface RelationalService<

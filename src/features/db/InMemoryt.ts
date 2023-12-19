@@ -24,6 +24,10 @@ export class InMemory<Item extends Id.WithId> implements Service<Item> {
         await new Promise(res => setTimeout(res, 1000));
         return [...this.items.values()];
     }
+
+    public async delete(id: Item["id"]): Promise<void> {
+        this.items.delete(id);
+    }
 }
 
 export class RelationalInMemory<
