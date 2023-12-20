@@ -3,7 +3,7 @@ import { For, useContext } from "solid-js";
 
 import { Input, Loader, Note, Paragraph, Store } from "..";
 
-export default function () {
+export function JSX () {
    const store = useContext(Store.StoreContext);
    const actions = useContext(Store.ActionContext);
 

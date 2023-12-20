@@ -2,8 +2,7 @@ import { Store as EffectorStore } from "effector";
 import { ParentComponent, createContext } from "solid-js";
 
 import { DB, Note, Paragraph } from "..";
-import { make, Actions } from "./store";
-import { Root } from "./root";
+import { Actions, Root, make } from "./root";
 
 const [store, actions] = make(
     new DB.InMemory<Note.T>([Note.UNSORTED]),

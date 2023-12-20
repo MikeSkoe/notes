@@ -4,7 +4,7 @@ interface Props {
     onSubmit: (input: string) => void;
 }
 
-export default function ({ onSubmit }: Props) {
+export function JSX ({ onSubmit }: Props) {
   const [input, setInput] = createSignal("");
 
   return (

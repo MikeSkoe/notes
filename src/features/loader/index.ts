@@ -1,2 +1,2 @@
-export { default as JSX } from "./jsx";
+export * from "./jsx";
 export * from "./loader";

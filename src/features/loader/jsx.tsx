@@ -1,14 +1,14 @@
-import { Accessor, JSX, Show } from "solid-js";
+import { Accessor, Show, JSXElement } from "solid-js";
 
 import { Loader } from "..";
 import { T } from "./loader";
 
 interface LoaderCompProps<A> {
   loadable: Accessor<T<A>>,
-  children: (item: Accessor<A>) => JSX.Element;
+  children: (item: Accessor<A>) => JSXElement;
 }
 
-export default function <A>({ loadable, children }: LoaderCompProps<A>) {
+export function JSX<A>({ loadable, children }: LoaderCompProps<A>) {
   return <Show
     when={Loader.getWithDefault(loadable(), null)}
     fallback={<div>...loading</div>}
