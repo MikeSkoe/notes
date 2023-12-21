@@ -5,7 +5,7 @@ import { Actions, EMPTY, Root } from "../root";
 
 // Initialize the application
 
-export function init(): Root {
+export function action(): Root {
     return EMPTY;
 }
 
@@ -32,7 +32,7 @@ export function paragraphsLoaded(root: Root, items: Paragraph.T[]): Root | void 
  * @param noteService
  * @param paragraphService
  */
-export function initialLoadFX(
+export function FX(
     actions: Actions,
     noteService: DB.Service<Note.T>,
     paragraphService: DB.RelationalService<Note.T, Paragraph.T>,

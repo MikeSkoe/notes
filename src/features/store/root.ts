@@ -1,11 +1,7 @@
 import { EventCallable, createApi, createStore } from "effector";
 
 import { DB, Loader, Note, Paragraph } from "..";
-import { init, initialLoadFX, notesLoaded, paragraphsLoaded } from "./useCases/init";
-import { deleteParagraph, deleteParagraphFX } from "./useCases/deleteParagraph";
-import { selectNote, selectNoteFX } from "./useCases/selectNote";
-import { addNote, addNoteFX } from "./useCases/addNote";
-import { addParagraph, addParagraphFX } from "./useCases/addParagraph";
+import { init, deleteParagraph, selectNote, addNote, addParagraph } from "./useCases";
 
 export type Notes = { items: Note.T[], selected: Note.T["id"] };
 export type Paragraphs = { items: Paragraph.T[] };
@@ -35,13 +31,13 @@ export function make(
 ) {
     const app$ = createStore(EMPTY, { skipVoid: true, updateFilter: (a, b) => a !== b });
     const api = createApi(app$, {
-        init,
-        notesLoaded,
-        paragraphsLoaded,
-        selectNote,
-        addNote,
-        addParagraph,
-        deleteParagraph,
+        init: init.action,
+        notesLoaded: init.notesLoaded,
+        paragraphsLoaded: init.paragraphsLoaded,
+        selectNote: selectNote.action,
+        addNote: addNote.action,
+        addParagraph: addParagraph.action,
+        deleteParagraph: deleteParagraph.action,
     });
 
     const selectedNote$ = app$.map(
@@ -51,11 +47,11 @@ export function make(
         ),
     );
 
-    initialLoadFX(api, noteService, paragraphService);
-    addNoteFX(api, noteService, paragraphService);
-    addParagraphFX(api, selectedNote$, paragraphService);
-    selectNoteFX(api, paragraphService);
-    deleteParagraphFX(api, selectedNote$, paragraphService);
+    init.FX(api, noteService, paragraphService);
+    addNote.FX(api, noteService, paragraphService);
+    addParagraph.FX(api, selectedNote$, paragraphService);
+    selectNote.FX(api, paragraphService);
+    deleteParagraph.FX(api, selectedNote$, paragraphService);
 
     return [app$, api] as const;
 }

@@ -4,7 +4,7 @@ import { DB, Loader, Note, Paragraph } from "../..";
 
 // Add new note
 
-export function addNote(root: Root, newNote: Note.T): Root {
+export function action(root: Root, newNote: Note.T): Root {
     const loadedNotes: Notes = Loader.getWithDefault(root.notes, { items: [], selected: Note.UNSORTED.id });
 
     return {
@@ -19,7 +19,7 @@ export function addNote(root: Root, newNote: Note.T): Root {
 /**
  * Add a new note to with the service and open the note
  */
-export function addNoteFX(
+export function FX(
     actions: Actions,
     noteService: DB.Service<Note.T>,
     paragraphService: DB.RelationalService<Note.T, Paragraph.T>,

@@ -5,7 +5,7 @@ import { Actions, Root } from "../root";
 
 // Delete paragraph
 
-export function deleteParagraph(root: Root, id: Paragraph.T["id"]): Root | void {
+export function action(root: Root, id: Paragraph.T["id"]): Root | void {
     if (Loader.isLoading(root.paragraphs) || Loader.isLoading(root.notes)) { return; }
 
     return {
@@ -22,7 +22,7 @@ export function deleteParagraph(root: Root, id: Paragraph.T["id"]): Root | void 
  * @param selectedNote$ Current selected note
  * @param paragraphService 
  */
-export function deleteParagraphFX(
+export function FX(
     actions: Actions,
     selectedNote$: Unit<Note.T["id"]>,
     paragraphService: DB.RelationalService<Note.T, Paragraph.T>,

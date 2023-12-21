@@ -5,7 +5,7 @@ import { DB, Loader, Note, Paragraph } from "../..";
 
 // Select a note
 
-export function selectNote(root: Root, newSelected: Note.T["id"]): Root | void {
+export function action(root: Root, newSelected: Note.T["id"]): Root | void {
     if (!Loader.isLoaded(root.notes) || root.notes.data.selected === newSelected) { return; }
 
     return {
@@ -20,7 +20,7 @@ export function selectNote(root: Root, newSelected: Note.T["id"]): Root | void {
 /**
  * Load paragraphs of the selected notes
  */
-export function selectNoteFX(
+export function FX(
     actions: Actions,
     paragraphService: DB.RelationalService<Note.T, Paragraph.T>,
 ) {

@@ -4,7 +4,7 @@ import { DB, Loader, Note, Paragraph } from "../..";
 
 // Add paragraph
 
-export function addParagraph(root: Root, newParagraph: Paragraph.T): Root | void {
+export function action(root: Root, newParagraph: Paragraph.T): Root | void {
     if (Loader.isLoading(root.notes) || Loader.isLoading(root.paragraphs)) {
         return;
     }
@@ -20,7 +20,7 @@ export function addParagraph(root: Root, newParagraph: Paragraph.T): Root | void
 /**
  * Add a new paragraph to the service and load the new list of paragraphs
  */
-export function addParagraphFX(
+export function FX(
     actions: Actions,
     selectedNote$: Unit<Note.T["id"]>,
     paragraphService: DB.RelationalService<Note.T, Paragraph.T>,
