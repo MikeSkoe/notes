@@ -1,9 +1,9 @@
-import { Id, Note } from "..";
+import { ID, Note } from "..";
 
-export type T = Id.WithId & Id.WithParents<Note.T> & { title: string; };
+export type T = ID.WithId & ID.WithParents<Note.T> & { title: string; };
 
 export const EMPTY: T = {
-    id: Id.make(),
+    id: ID.make(),
     title: "empty paragraph",
     parents: { [Note.UNSORTED.id]: 1 },
 };
@@ -13,7 +13,7 @@ export const make = (
     noteId: Note.T["id"],
     position: number,
 ): T => ({
-    id: Id.make(),
+    id: ID.make(),
     title,
     parents: { [noteId]: position },
 });

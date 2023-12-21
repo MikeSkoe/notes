@@ -1,7 +1,7 @@
-import { Id } from "..";
+import { ID } from "..";
 import { RelationalService, Service } from "./service";
 
-export class InMemory<Item extends Id.WithId> implements Service<Item> {
+export class InMemory<Item extends ID.WithId> implements Service<Item> {
     protected items = new Map<Item["id"], Item>();
 
     constructor(mockData: Item[]) {
@@ -31,8 +31,8 @@ export class InMemory<Item extends Id.WithId> implements Service<Item> {
 }
 
 export class RelationalInMemory<
-    Parent extends Id.WithId,
-    Item extends Id.WithId & Id.WithParents<Parent>,
+    Parent extends ID.WithId,
+    Item extends ID.WithId & ID.WithParents<Parent>,
 > extends InMemory<Item> implements RelationalService<Parent, Item> {
     constructor(mockData: Item[]) {
         super(mockData);

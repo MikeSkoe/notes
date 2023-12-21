@@ -1,6 +1,6 @@
-import { Id } from "..";
+import { ID } from "..";
 
-export interface Service<Item extends Id.WithId> {
+export interface Service<Item extends ID.WithId> {
     set: (item: Item) => Promise<void>;
     get: (id: Item["id"]) => Promise<Item>;
     getAll: () => Promise<Item[]>;
@@ -8,8 +8,8 @@ export interface Service<Item extends Id.WithId> {
 }
 
 export interface RelationalService<
-    Parent extends Id.WithId,
-    Item extends Id.WithId,
+    Parent extends ID.WithId,
+    Item extends ID.WithId,
 > extends Service<Item> {
     getByParentId: (id: Parent["id"]) => Promise<Item[]>;
 }

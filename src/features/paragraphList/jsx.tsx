@@ -1,7 +1,7 @@
 import { useStoreMap } from "effector-solid";
 import { For, useContext } from "solid-js";
 
-import { Input, Loader, Note, Paragraph, Store } from "..";
+import { Input, Loader, Note, Paragraph, ParagraphJSX, Store } from "..";
 
 export function JSX () {
    const store = useContext(Store.StoreContext);
@@ -19,11 +19,7 @@ export function JSX () {
    return <Loader.JSX loadable={loadableParagraphs}>
       {paragraphs => <>
          <For each={paragraphs().items}>
-            {/* TODO? move to the paragraph feature */}
-            {paragraph => <>
-               <h3>{paragraph.title}</h3>
-               <button onClick={() => actions.deleteParagraph(paragraph.id)}>x</button>
-            </>}
+            {paragraph => <ParagraphJSX paragraph={paragraph} />}
          </For>
 
          <Input.JSX

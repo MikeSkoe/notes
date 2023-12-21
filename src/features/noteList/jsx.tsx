@@ -1,15 +1,7 @@
 import { useStoreMap } from "effector-solid";
-import { Accessor, For, onMount, useContext } from "solid-js";
+import { For, onMount, useContext } from "solid-js";
 
-import { Input, Loader, Note, Store } from "..";
-
-function NoteJSX({ note, selectedNote }: { note: Note.T, selectedNote: Accessor<Note.T["id"]>}) {
-   const actions = useContext(Store.ActionContext);
-
-   return <h2 onClick={() => actions.selectNote(note.id)}>
-      {selectedNote() === note.id ? ">" : " "} {note.title}
-   </h2>
-}
+import { Input, Loader, Note, Store, NoteJSX } from "..";
 
 export function JSX() {
    const store = useContext(Store.StoreContext);
