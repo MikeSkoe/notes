@@ -1,13 +1,14 @@
-import { useContext } from "solid-js";
+import { useContext } from "react";
 
-import { Store } from "..";
-import { T } from "./entity";
+import { Store } from "../..";
+
+import { T } from "..";
 
 type Props = {
    paragraph: T;
 }
 
-export function JSX({ paragraph }: Props) {
+export function Item({ paragraph }: Props) {
    const actions = useContext(Store.ActionContext);
 
    return <p>

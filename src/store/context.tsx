@@ -1,5 +1,5 @@
 import { Store as EffectorStore } from "effector";
-import { ParentComponent, createContext } from "solid-js";
+import { PropsWithChildren, createContext } from "react";
 
 import { DB, Note, Paragraph } from "..";
 import { Actions, Root, make } from "./root";
@@ -12,7 +12,7 @@ const [store, actions] = make(
 export const StoreContext = createContext<EffectorStore<Root>>(store);
 export const ActionContext = createContext<Actions>(actions);
 
-export const Provider: ParentComponent = ({ children }) => {
+export function Provider({ children }: PropsWithChildren) {
     return <StoreContext.Provider value={store}>
         <ActionContext.Provider value={actions}>
             {children}

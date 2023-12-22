@@ -29,7 +29,7 @@ export function make(
     noteService: DB.Service<Note.T>,
     paragraphService: DB.RelationalService<Note.T, Paragraph.T>,
 ) {
-    const app$ = createStore(EMPTY, { skipVoid: true, updateFilter: (a, b) => a !== b });
+    const app$ = createStore(EMPTY);
     const api = createApi(app$, {
         init: init.action,
         notesLoaded: init.notesLoaded,

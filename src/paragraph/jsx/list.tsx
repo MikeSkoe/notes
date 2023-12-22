@@ -1,9 +1,11 @@
-import { useStoreMap } from "effector-solid";
-import { For, useContext } from "solid-js";
+import { useStoreMap } from "effector-react";
+import { useContext } from "react";
 
-import { Input, Loader, Note, Paragraph, ParagraphJSX, Store } from "..";
+import { Input, Loader, LoaderJSX, Note, Paragraph, Store } from "../..";
 
-export function JSX () {
+import { Item } from "./item";
+
+export function List() {
    const store = useContext(Store.StoreContext);
    const actions = useContext(Store.ActionContext);
 
@@ -16,19 +18,18 @@ export function JSX () {
 
    const loadableParagraphs = useStoreMap<Store.Root, Loader.T<Store.Paragraphs>>(store, store => store.paragraphs)
 
-   return <Loader.JSX loadable={loadableParagraphs}>
+   return <LoaderJSX.Show loadable={loadableParagraphs}>
       {paragraphs => <>
-         <For each={paragraphs().items}>
-            {paragraph => <ParagraphJSX paragraph={paragraph} />}
-         </For>
+         {paragraphs.items.map(paragraph =>
+            <Item key={paragraph.id} paragraph={paragraph} />)}
 
          <Input.JSX
             onSubmit={title => {
-               const paragraphs = Loader.getWithDefault(loadableParagraphs(), { items: [] }).items;
-               const noteId = selectedNoteId();
+               const paragraphs = Loader.getWithDefault(loadableParagraphs, { items: [] }).items;
+               const noteId = selectedNoteId;
                actions.addParagraph(Paragraph.make(title, noteId, Paragraph.getNextPosition(paragraphs, noteId)));
             }}
          />
       </>}
-   </Loader.JSX>;
+   </LoaderJSX.Show>;
 }
