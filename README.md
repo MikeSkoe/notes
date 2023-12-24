@@ -1,3 +1,3 @@
 ## Nested notes
 
-Stack: Effector + SolidJS
+Stack: Effector + React

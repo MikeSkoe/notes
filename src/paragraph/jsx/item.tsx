@@ -12,7 +12,7 @@ export function Item({ paragraph }: Props) {
    const actions = useContext(Store.ActionContext);
 
    return <p>
-      <button onClick={() => actions.deleteParagraph(paragraph.id)}>x</button>
+      <button onClick={() => actions.deleteParagraph(paragraph.id)}>delete paragraph</button>
       {paragraph.title}
    </p>
 }

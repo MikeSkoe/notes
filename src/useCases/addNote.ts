@@ -1,15 +1,18 @@
 import { createEffect, sample } from "effector";
-import { Actions, Notes, Root } from "..";
-import { DB, Loader, Note, Paragraph } from "../..";
+
+import { Service, Loader, Note, Paragraph, Root } from "..";
 
 // Add new note
 
-export function action(root: Root, newNote: Note.T): Root {
-    const loadedNotes: Notes = Loader.getWithDefault(root.notes, { items: [], selected: Note.UNSORTED.id });
+export function action(root: Root.T, newNote: Note.T): Root.T {
+    const loadedNotes: Note.T[] = Loader.getWithDefault(
+        Loader.map(root.notes, ({ items }) => items),
+        [],
+    );
 
     return {
         notes: Loader.loaded({
-            items: loadedNotes.items.concat(newNote),
+            items: loadedNotes.concat(newNote),
             selected: newNote.id,
         }),
         paragraphs: Loader.loading(),
@@ -20,9 +23,9 @@ export function action(root: Root, newNote: Note.T): Root {
  * Add a new note to with the service and open the note
  */
 export function FX(
-    actions: Actions,
-    noteService: DB.Service<Note.T>,
-    paragraphService: DB.RelationalService<Note.T, Paragraph.T>,
+    actions: Root.Actions,
+    noteService: Service.Service<Note.T>,
+    paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
 ) {
     return sample({
         clock: actions.addNote,

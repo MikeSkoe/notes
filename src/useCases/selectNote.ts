@@ -1,11 +1,10 @@
 import { createEffect, sample } from "effector";
 
-import { Actions, Root } from "..";
-import { DB, Loader, Note, Paragraph } from "../..";
+import { Loader, Note, Paragraph, Root, Service } from "..";
 
 // Select a note
 
-export function action(root: Root, newSelected: Note.T["id"]): Root | void {
+export function action(root: Root.T, newSelected: Note.T["id"]): Root.T | void {
     if (!Loader.isLoaded(root.notes) || root.notes.data.selected === newSelected) { return; }
 
     return {
@@ -21,8 +20,8 @@ export function action(root: Root, newSelected: Note.T["id"]): Root | void {
  * Load paragraphs of the selected notes
  */
 export function FX(
-    actions: Actions,
-    paragraphService: DB.RelationalService<Note.T, Paragraph.T>,
+    actions: Root.Actions,
+    paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
 ) {
     return sample({
         clock: actions.selectNote,

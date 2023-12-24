@@ -1,22 +1,21 @@
 import { createEffect, sample } from "effector";
 
-import { DB, Loader, Note, Paragraph } from "../..";
-import { Actions, EMPTY, Root } from "../root";
+import { Service, Loader, Note, Paragraph, Root } from "..";
 
 // Initialize the application
 
-export function action(): Root {
-    return EMPTY;
+export function action(): Root.T {
+    return Root.EMPTY;
 }
 
-export function notesLoaded(_: Root, [selected, items]: [Note.T["id"], Note.T[]]): Root {
+export function notesLoaded(_: Root.T, [selected, items]: [Note.T["id"], Note.T[]]): Root.T {
     return ({
         notes: Loader.loaded({ items, selected }),
         paragraphs: Loader.loading(),
     });
 };
 
-export function paragraphsLoaded(root: Root, items: Paragraph.T[]): Root | void {
+export function paragraphsLoaded(root: Root.T, items: Paragraph.T[]): Root.T | void {
     if (!Loader.isLoaded(root.notes)) { return; }
 
     return {
@@ -25,7 +24,6 @@ export function paragraphsLoaded(root: Root, items: Paragraph.T[]): Root | void 
     };
 }
 
-
 /**
  * Load notes and paragraphs of the unsorted note
  * @param api store actions
@@ -33,9 +31,9 @@ export function paragraphsLoaded(root: Root, items: Paragraph.T[]): Root | void 
  * @param paragraphService
  */
 export function FX(
-    actions: Actions,
-    noteService: DB.Service<Note.T>,
-    paragraphService: DB.RelationalService<Note.T, Paragraph.T>,
+    actions: Root.Actions,
+    noteService: Service.Service<Note.T>,
+    paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
 ) {
     return sample({
         clock: actions.init,

@@ -1,18 +1,29 @@
-import { Store as EffectorStore } from "effector";
-import { PropsWithChildren, createContext } from "react";
+import { Store as EffectorStore, Store } from "effector";
+import { PropsWithChildren, createContext, useEffect } from "react";
 
-import { DB, Note, Paragraph } from "..";
-import { Actions, Root, make } from "./root";
+import { Service, Note, Paragraph, Root } from "..";
+import { make } from "./make";
 
-const [store, actions] = make(
-    new DB.InMemory<Note.T>([Note.UNSORTED]),
-    new DB.RelationalInMemory<Note.T, Paragraph.T>([Paragraph.EMPTY]),
+const [mainStore, mainActions] = make(
+    new Service.InMemory<Note.T>([Note.UNSORTED]),
+    new Service.RelationalInMemory<Note.T, Paragraph.T>([Paragraph.EMPTY]),
 );
 
-export const StoreContext = createContext<EffectorStore<Root>>(store);
-export const ActionContext = createContext<Actions>(actions);
+export const StoreContext = createContext<EffectorStore<Root.T>>(mainStore);
+export const ActionContext = createContext<Root.Actions>(mainActions);
 
-export function Provider({ children }: PropsWithChildren) {
+type Props = PropsWithChildren<{
+    store?: Store<Root.T>,
+    actions?: Root.Actions,
+}>;
+
+export function Provider({
+    children,
+    store = mainStore,
+    actions = mainActions,
+}: Props) {
+    useEffect(() => actions.init());
+
     return <StoreContext.Provider value={store}>
         <ActionContext.Provider value={actions}>
             {children}

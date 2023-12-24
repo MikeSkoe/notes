@@ -1,7 +1,7 @@
 import { useStoreMap } from "effector-react";
 import { useContext } from "react";
 
-import { Input, Loader, LoaderJSX, Note, Paragraph, Store } from "../..";
+import { Input, Loader, LoaderJSX, Note, Paragraph, Store, Root } from "../..";
 
 import { Item } from "./item";
 
@@ -9,14 +9,14 @@ export function List() {
    const store = useContext(Store.StoreContext);
    const actions = useContext(Store.ActionContext);
 
-   const selectedNoteId = useStoreMap<Store.Root, Note.T["id"]>(
+   const selectedNoteId = useStoreMap<Root.T, Note.T["id"]>(
       store,
       store => Loader.isLoaded(store.notes)
          ? store.notes.data.selected
          : Note.UNSORTED.id,
    );
 
-   const loadableParagraphs = useStoreMap<Store.Root, Loader.T<Store.Paragraphs>>(store, store => store.paragraphs)
+   const loadableParagraphs = useStoreMap<Root.T, Loader.T<Root.Paragraphs>>(store, store => store.paragraphs)
 
    return <LoaderJSX.Show loadable={loadableParagraphs}>
       {paragraphs => <>

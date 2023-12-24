@@ -1,10 +1,10 @@
 import { Unit, createEffect, sample } from "effector";
-import { Actions, Root } from "..";
-import { DB, Loader, Note, Paragraph } from "../..";
+
+import { Service, Loader, Note, Paragraph, Root } from "..";
 
 // Add paragraph
 
-export function action(root: Root, newParagraph: Paragraph.T): Root | void {
+export function action(root: Root.T, newParagraph: Paragraph.T): Root.T | void {
     if (Loader.isLoading(root.notes) || Loader.isLoading(root.paragraphs)) {
         return;
     }
@@ -21,9 +21,9 @@ export function action(root: Root, newParagraph: Paragraph.T): Root | void {
  * Add a new paragraph to the service and load the new list of paragraphs
  */
 export function FX(
-    actions: Actions,
+    actions: Root.Actions,
     selectedNote$: Unit<Note.T["id"]>,
-    paragraphService: DB.RelationalService<Note.T, Paragraph.T>,
+    paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
 ) {
     return sample({
         clock: actions.addParagraph,

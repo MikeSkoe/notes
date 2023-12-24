@@ -4,12 +4,14 @@ export * as Input from "./input";
 // Utils
 export * as Result from "./result";
 export * as Loader from "./loader";
+export * as ID from "./id";
 
 // Entities
-export * as ID from "./id";
-export * as DB from "./db";
+export * as Service from "./service";
 export * as Note from "./note";
 export * as Paragraph from "./paragraph";
+export * as Root from "./root";
+export * as UseCase from "./useCases";
 export * as Store from "./store";
 
 // Entities UI
