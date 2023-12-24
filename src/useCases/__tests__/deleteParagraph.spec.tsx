@@ -11,7 +11,7 @@ test("Delete paragraph", async () => {
         new Service.RelationalInMemory<Note.T, Paragraph.T>([Paragraph.EMPTY]),
     );
 
-    const { getByText } = render(
+    const { getByText, queryByText } = render(
         <Store.Provider store={store} actions={actions}>
             <ParagraphJSX.List />
         </Store.Provider>
@@ -23,7 +23,5 @@ test("Delete paragraph", async () => {
 
     await user.click(getByText(/delete paragraph/i));
 
-    await waitFor(() => {
-        expect(getByText(Paragraph.EMPTY.title)).not.toBeInTheDocument()
-    });
+    expect(queryByText(Paragraph.EMPTY.title)).toBeNull();
 });
