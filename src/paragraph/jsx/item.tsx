@@ -1,31 +1,51 @@
 import { useContext, useState } from "react";
 
-import { NoteJSX, Option, Store } from "../..";
+import { NoteJSX, Option, Paragraph, Store } from "../..";
 
 import { T } from "..";
 
-type Props = {
-   paragraph: T;
+type Props = { paragraph: T; }
+
+type LinkProps = { paragraph: Paragraph.T; }
+
+function Link({ paragraph }: LinkProps) {
+    const actions = useContext(Store.ActionContext);
+    const [linkSelection, setLinkSelection] = useState(false);
+
+    if (Option.isNone(paragraph.noteLink)) {
+        if (linkSelection) {
+            return <NoteJSX.Select
+                onSelect={noteId => actions.linkParagraphToNote([paragraph.id, noteId])}
+                excludeIds={Object.keys(paragraph.parents)}
+                goBack={() => setLinkSelection(false)}
+            />
+        }
+
+        return <button onClick={() => setLinkSelection(true)}>
+            link to
+        </button>;
+    }
+
+    return <button
+        onClick={() => {
+            if (Option.isSome(paragraph.noteLink)) {
+                actions.selectNote(paragraph.noteLink.data);
+            }
+        }}
+    >
+        open
+    </button>;
 }
 
 export function Item({ paragraph }: Props) {
-   const actions = useContext(Store.ActionContext);
-   const [linkSelection, setLinkSelection] = useState(false);
+    const actions = useContext(Store.ActionContext);
 
-   return <li>
-      <button onClick={() => actions.deleteParagraph(paragraph.id)}>delete paragraph</button>
-      {paragraph.title}
-
-      {Option.isNone(paragraph.noteLink)
-         ? linkSelection
-            ? <NoteJSX.Select onSelect={noteId => actions.linkParagraphToNote([paragraph.id, noteId])} />
-            : <button onClick={() => setLinkSelection(true)}>link to</button>
-         : <button onClick={() => {
-            if (Option.isNone(paragraph.noteLink)) {
-               return;
-            }
-            actions.selectNote(paragraph.noteLink.data);
-         }}>go to link</button>
-      }
-   </li>
+    return <li>
+        {paragraph.title}
+        <br />
+        <Link paragraph={paragraph} />
+        <button onClick={() => actions.deleteParagraph(paragraph.id)}>
+            delete
+        </button>
+    </li>
 }
