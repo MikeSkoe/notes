@@ -35,14 +35,16 @@ export function FX(
 ) {
     return sample({
         clock: actions.addNewNote,
-        target: createEffect<string, void>(async title => {
-            const newNote = Note.make(title);
-            actions.addNote(newNote);
-            await noteService.set(newNote);
-            const newNotes = await noteService.getAll();
-            actions.notesLoaded([newNote.id, newNotes]);
-            const newParagraphs = await paragraphService.getByParentId(newNote.id);
-            actions.paragraphsLoaded(newParagraphs);
-        }),
+        target: createEffect<string, void>(effect),
     });
+
+    async function effect(title: string) {
+        const newNote = Note.make(title);
+        actions.addNote(newNote);
+        await noteService.set(newNote);
+        const newNotes = await noteService.getAll();
+        actions.notesLoaded([newNote.id, newNotes]);
+        const newParagraphs = await paragraphService.getByParentId(newNote.id);
+        actions.paragraphsLoaded(newParagraphs);
+    }
 }

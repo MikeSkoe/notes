@@ -1,12 +1,33 @@
-import { ID, Note } from "..";
+import { ID, Note, Option } from "..";
 
-export type T = ID.WithId & ID.WithParents<Note.T> & { title: string; };
+export type T =
+    & ID.WithId
+    & ID.WithParents<Note.T>
+    & {
+        title: string;
+        noteLink: Option.T<Note.T["id"]>;
+    }
 
 export const EMPTY: T = {
     id: ID.make(),
     title: "empty paragraph",
+    noteLink: Option.none(),
     parents: { [Note.UNSORTED.id]: 1 },
 };
+
+export function linkToNote(t: T, noteId: Note.T["id"]): T {
+    return {
+        ...t,
+        noteLink: Option.some(noteId),
+    };
+}
+
+export function unlink(t: T): T {
+    return {
+        ...t,
+        noteLink: Option.none(),
+    };
+}
 
 export function make(title: string): T {
     return {
@@ -21,7 +42,6 @@ export function setPosition(t: T, position: number, parent: Note.T["id"]): T {
         ...t,
         parents: { [parent]: position },
     }
-
 }
 
 export function getNextPosition(paragraphs: T[], parent: Note.T["id"]): number {

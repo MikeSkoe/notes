@@ -9,8 +9,6 @@ export function Item({ note, selectedNote }: { note: T, selectedNote: T["id"]}) 
    const selected = selectedNote === note.id;
 
    return <li onClick={() => actions.selectNote(note.id)}>
-      {selected
-         ? <b>{note.title}</b>
-         : note.title}
+      {selected ? <b>{note.title}</b> : note.title}
    </li>
 }

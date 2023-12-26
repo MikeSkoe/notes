@@ -38,22 +38,24 @@ export function FX(
         clock: actions.addNewParagraph,
         source: root$,
         fn: (root: Root, title: string) => [root, title] as const,
-        target: createEffect<[Root, string], void>(async ([root, title]) => {
-            if (!title || Loader.isLoading(root.notes) || Loader.isLoading(root.paragraphs)) {
-                return;
-            }
-            const selectedNote = root.notes.data.selected;
-            const paragraphs = root.paragraphs.data.items;
-            const newParagraph = Paragraph.setPosition(
-                Paragraph.make(title),
-                Paragraph.getNextPosition(paragraphs, selectedNote),
-                selectedNote,
-            );
-
-            actions.addParagraph(newParagraph);
-            paragraphService.set(newParagraph);
-            const newParagraphs = await paragraphService.getByParentId(selectedNote);
-            actions.paragraphsLoaded(newParagraphs);
-        }),
+        target: createEffect(effect),
     });
+
+    async function effect([root, title]: [Root, string]) {
+        if (!title || Loader.isLoading(root.notes) || Loader.isLoading(root.paragraphs)) {
+            return;
+        }
+        const selectedNote = root.notes.data.selected;
+        const paragraphs = root.paragraphs.data.items;
+        const newParagraph = Paragraph.setPosition(
+            Paragraph.make(title),
+            Paragraph.getNextPosition(paragraphs, selectedNote),
+            selectedNote,
+        );
+
+        actions.addParagraph(newParagraph);
+        paragraphService.set(newParagraph);
+        const newParagraphs = await paragraphService.getByParentId(selectedNote);
+        actions.paragraphsLoaded(newParagraphs);
+    }
 }

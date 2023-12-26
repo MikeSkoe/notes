@@ -39,12 +39,14 @@ export function FX(
 ) {
     return sample({
         clock: actions.init,
-        target: createEffect(async () => {
-            const notes = await noteService.getAll();
-            actions.notesLoaded([Note.UNSORTED.id, notes]);
-            const paragraphs = await paragraphService.getByParentId(Note.UNSORTED.id);
-            actions.paragraphsLoaded(paragraphs);
-        }),
+        target: createEffect(effect),
     });
+
+    async function effect() {
+        const notes = await noteService.getAll();
+        actions.notesLoaded([Note.UNSORTED.id, notes]);
+        const paragraphs = await paragraphService.getByParentId(Note.UNSORTED.id);
+        actions.paragraphsLoaded(paragraphs);
+    }
 }
 

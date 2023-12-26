@@ -11,6 +11,7 @@ export function MainLayout({ noteList, paragraphList, addNote, addParagraph }: P
 			{noteList}
 			{addNote}
 		</aside>
+
 		<main>
 			{paragraphList}
 			{addParagraph}

@@ -32,10 +32,12 @@ export function FX(
         clock: actions.deleteParagraph,
         source: selectedNote$,
         fn: (noteId: Note.T["id"], paragraphId: Paragraph.T["id"]) => [noteId, paragraphId] as const,
-        target: createEffect<[Note.T["id"], Paragraph.T["id"]], void>(async ([noteId, paragraphId]) => {
-            await paragraphService.delete(paragraphId);
-            const paragraphs = await paragraphService.getByParentId(noteId);
-            actions.paragraphsLoaded(paragraphs);
-        }),
-    })
+        target: createEffect(effect),
+    });
+
+    async function effect([noteId, paragraphId]: [Note.T["id"], Paragraph.T["id"]]) {
+        await paragraphService.delete(paragraphId);
+        const paragraphs = await paragraphService.getByParentId(noteId);
+        actions.paragraphsLoaded(paragraphs);
+    }
 }

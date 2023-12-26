@@ -17,6 +17,7 @@ export function make(
         addParagraph: UseCase.addParagraph.action,
         addNewParagraph: UseCase.addParagraph.preAction,
         deleteParagraph: UseCase.deleteParagraph.action,
+        linkParagraphToNote: UseCase.linkParagraphToNote.action,
     });
 
     const selectedNote$ = app$.map(
@@ -31,6 +32,7 @@ export function make(
     UseCase.addParagraph.FX(api, app$, paragraphService);
     UseCase.selectNote.FX(api, paragraphService);
     UseCase.deleteParagraph.FX(api, selectedNote$, paragraphService);
+    UseCase.linkParagraphToNote.FX(api, selectedNote$, paragraphService);
 
     return [app$, api];
 }

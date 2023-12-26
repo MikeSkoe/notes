@@ -4,10 +4,10 @@ import { Loader, Note, Paragraph } from "..";
 
 export type Notes = { items: Note.T[], selected: Note.T["id"] };
 export type Paragraphs = { items: Paragraph.T[] };
-export type Root =
-    | { notes: Loader.Loading<Notes>; paragraphs: Loader.Loading<Paragraphs> }
-    | { notes: Loader.Loaded<Notes>; paragraphs: Loader.Loading<Paragraphs> }
-    | { notes: Loader.Loaded<Notes>; paragraphs: Loader.Loaded<Paragraphs> }
+export type Root = {
+    notes: Loader.T<Notes>;
+    paragraphs: Loader.T<Paragraphs>;
+}
 
 export const EMPTY: Root = {
     notes: Loader.loading(),
@@ -24,4 +24,5 @@ export interface Actions {
     addNewParagraph: EventCallable<string>;
     addParagraph: EventCallable<Paragraph.T>;
     deleteParagraph: EventCallable<Paragraph.T["id"]>;
+    linkParagraphToNote: EventCallable<[Paragraph.T["id"], Note.T["id"]]>;
 }
