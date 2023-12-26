@@ -8,15 +8,21 @@ export const EMPTY: T = {
     parents: { [Note.UNSORTED.id]: 1 },
 };
 
-export const make = (
-    title: string,
-    noteId: Note.T["id"],
-    position: number,
-): T => ({
-    id: ID.make(),
-    title,
-    parents: { [noteId]: position },
-});
+export function make(title: string): T {
+    return {
+        ...EMPTY,
+        id: ID.make(),
+        title,
+    }
+}
+
+export function setPosition(t: T, position: number, parent: Note.T["id"]): T {
+    return {
+        ...t,
+        parents: { [parent]: position },
+    }
+
+}
 
 export function getNextPosition(paragraphs: T[], parent: Note.T["id"]): number {
     const STEP = 100;

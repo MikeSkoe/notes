@@ -19,3 +19,6 @@ export const flatMap = <A, B>(t: T<A>, fn: (a: A) => T<B>): T<B> =>
 
 export const getWithDefault = <A>(t: T<A>, defaultValue: A): A =>
     isLoaded(t) ? t.data : defaultValue;
+
+export const getMapWithDefault = <A, B>(t: T<A>, fn: (a: A) => B, defaultValue: B): B =>
+    isLoaded(t) ? fn(t.data) : defaultValue;

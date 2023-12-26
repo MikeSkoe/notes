@@ -1,7 +1,8 @@
 import { Store as EffectorStore, Store } from "effector";
 import { PropsWithChildren, createContext, useEffect } from "react";
 
-import { Service, Note, Paragraph, Root } from "..";
+import { Service, Note, Paragraph, UseCase } from "..";
+
 import { make } from "./make";
 
 const [mainStore, mainActions] = make(
@@ -9,12 +10,12 @@ const [mainStore, mainActions] = make(
     new Service.RelationalInMemory<Note.T, Paragraph.T>([Paragraph.EMPTY]),
 );
 
-export const StoreContext = createContext<EffectorStore<Root.T>>(mainStore);
-export const ActionContext = createContext<Root.Actions>(mainActions);
+export const StoreContext = createContext<EffectorStore<UseCase.Root>>(mainStore);
+export const ActionContext = createContext<Omit<UseCase.Actions, "addNote" | "addParagraph">>(mainActions);
 
 type Props = PropsWithChildren<{
-    store?: Store<Root.T>,
-    actions?: Root.Actions,
+    store?: Store<UseCase.Root>,
+    actions?: UseCase.Actions,
 }>;
 
 export function Provider({
@@ -22,7 +23,7 @@ export function Provider({
     store = mainStore,
     actions = mainActions,
 }: Props) {
-    useEffect(() => actions.init());
+    useEffect(actions.init);
 
     return <StoreContext.Provider value={store}>
         <ActionContext.Provider value={actions}>

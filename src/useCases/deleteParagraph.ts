@@ -1,10 +1,12 @@
 import { Unit, createEffect, sample } from "effector";
 
-import { Loader, Note, Paragraph, Service, Root } from "..";
+import { Loader, Note, Paragraph, Service } from "..";
+
+import { Root, Actions } from "./root";
 
 // Delete paragraph
 
-export function action(root: Root.T, id: Paragraph.T["id"]): Root.T | void {
+export function action(root: Root, id: Paragraph.T["id"]): Root | void {
     if (Loader.isLoading(root.paragraphs) || Loader.isLoading(root.notes)) { return; }
 
     return {
@@ -22,7 +24,7 @@ export function action(root: Root.T, id: Paragraph.T["id"]): Root.T | void {
  * @param paragraphService 
  */
 export function FX(
-    actions: Root.Actions,
+    actions: Actions,
     selectedNote$: Unit<Note.T["id"]>,
     paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
 ) {

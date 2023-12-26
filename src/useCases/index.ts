@@ -1,3 +1,4 @@
+export * from "./root"
 export * as init from "./init";
 export * as addNote from "./addNote";
 export * as addParagraph from "./addParagraph";

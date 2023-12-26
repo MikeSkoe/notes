@@ -1,10 +1,16 @@
 import { createEffect, sample } from "effector";
 
-import { Service, Loader, Note, Paragraph, Root } from "..";
+import { Service, Loader, Note, Paragraph } from "..";
+
+import { Actions, Root } from "./root";
 
 // Add new note
 
-export function action(root: Root.T, newNote: Note.T): Root.T {
+export function preAction(root: Root, _title: string): Root {
+    return root;
+}
+
+export function action(root: Root, newNote: Note.T): Root {
     const loadedNotes: Note.T[] = Loader.getWithDefault(
         Loader.map(root.notes, ({ items }) => items),
         [],
@@ -23,13 +29,15 @@ export function action(root: Root.T, newNote: Note.T): Root.T {
  * Add a new note to with the service and open the note
  */
 export function FX(
-    actions: Root.Actions,
+    actions: Actions,
     noteService: Service.Service<Note.T>,
     paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
 ) {
     return sample({
-        clock: actions.addNote,
-        target: createEffect(async (newNote: Note.T) => {
+        clock: actions.addNewNote,
+        target: createEffect<string, void>(async title => {
+            const newNote = Note.make(title);
+            actions.addNote(newNote);
             await noteService.set(newNote);
             const newNotes = await noteService.getAll();
             actions.notesLoaded([newNote.id, newNotes]);

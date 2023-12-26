@@ -1,27 +1,17 @@
 import { useStoreMap } from "effector-react";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
-import { Input, Loader, LoaderJSX, Note, Store, Root } from "../..";
+import { Loader, LoaderJSX, Store, UseCase } from "../..";
 
 import { Item } from "./item";
 
 export function List() {
    const store = useContext(Store.StoreContext);
-   const actions = useContext(Store.ActionContext);
-   const notes = useStoreMap<Root.T, Loader.T<Root.Notes>>(store, store => store.notes);
-   const selectedNote = useStoreMap<Root.T, Note.T["id"]>(store, store =>
-      Loader.getWithDefault(
-         Loader.map(store.notes, ({ selected }) => selected),
-         Note.UNSORTED.id,
-      ),
-   );
+   const notes = useStoreMap<UseCase.Root, Loader.T<UseCase.Notes>>(store, store => store.notes);
 
-   return <LoaderJSX.Show loadable={notes}>
-      {notes => <>
-         {notes.items.map(note =>
-            <Item key={note.id} note={note} selectedNote={selectedNote}/> )}
-
-         <Input.JSX onSubmit={input => actions.addNote(Note.make(input))} />
-      </>}
-   </LoaderJSX.Show>;
+   return <LoaderJSX.Show loadable={notes}>{notes =>
+      <ul>{notes.items.map(note =>
+         <Item key={note.id} note={note} selectedNote={notes.selected}/> )}
+      </ul>
+   }</LoaderJSX.Show>;
 };
