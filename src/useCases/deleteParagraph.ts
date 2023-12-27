@@ -7,14 +7,14 @@ import { Root, Actions } from "./root";
 // Delete paragraph
 
 export function action(root: Root, id: Paragraph.T["id"]): Root | void {
-    if (Loader.isLoading(root.paragraphs) || Loader.isLoading(root.notes)) { return; }
+    if (Loader.isLoading(root)) {
+        return;
+    }
 
-    return {
-        notes: root.notes,
-        paragraphs: Loader.loaded({
-            items: root.paragraphs.data.items.filter(pr => pr.id !== id),
-        }),
-    };
+    return Loader.map(root, state => ({
+        ...state,
+        paragraphs: state.paragraphs.filter(pr => pr.id !== id),
+    }));
 }
 
 /**

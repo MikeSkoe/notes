@@ -12,28 +12,28 @@ function Link({ paragraph }: LinkProps) {
     const actions = useContext(Store.ActionContext);
     const [linkSelection, setLinkSelection] = useState(false);
 
-    if (Option.isNone(paragraph.noteLink)) {
-        if (linkSelection) {
-            return <NoteJSX.Select
-                onSelect={noteId => actions.linkParagraphToNote([paragraph.id, noteId])}
-                excludeIds={Object.keys(paragraph.parents)}
-                goBack={() => setLinkSelection(false)}
-            />
-        }
-
-        return <button onClick={() => setLinkSelection(true)}>
-            link to
+    if (Option.isSome(paragraph.noteLink)) {
+        return <button
+            onClick={() => {
+                if (Option.isSome(paragraph.noteLink)) {
+                    actions.selectNote(paragraph.noteLink.data);
+                }
+            }}
+        >
+            open
         </button>;
     }
 
-    return <button
-        onClick={() => {
-            if (Option.isSome(paragraph.noteLink)) {
-                actions.selectNote(paragraph.noteLink.data);
-            }
-        }}
-    >
-        open
+    if (linkSelection) {
+        return <NoteJSX.Select
+            onSelect={noteId => actions.linkParagraphToNote([paragraph.id, noteId])}
+            excludeIds={Object.keys(paragraph.parents)}
+            goBack={() => setLinkSelection(false)}
+        />
+    }
+
+    return <button onClick={() => setLinkSelection(true)}>
+        link to
     </button>;
 }
 

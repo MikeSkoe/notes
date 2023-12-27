@@ -8,14 +8,12 @@ export function action(
 	root: Root,
 	[paragraphId, noteId]: [Paragraph.T["id"], Note.T["id"]],
 ): Root {
-	return {
-		...root,
-		paragraphs: Loader.map(root.paragraphs, ({ items }) => ({
-			items: items.map(item => item.id === paragraphId
-				? Paragraph.linkToNote(item, noteId)
-				: item),
-		})),
-	};
+	return Loader.map(root, state => ({
+		...state,
+		paragraphs: state.paragraphs.map(p => p.id === paragraphId
+			? Paragraph.linkToNote(p, noteId)
+			: p),
+	}));
 }
 
 export function FX(

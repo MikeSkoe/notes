@@ -7,16 +7,14 @@ import { Root, Actions } from "./root";
 // Add paragraph
 
 export function action(root: Root, newParagraph: Paragraph.T): Root | void {
-    if (!newParagraph.title || Loader.isLoading(root.notes) || Loader.isLoading(root.paragraphs)) {
+    if (!newParagraph.title || Loader.isLoading(root)) {
         return;
     }
 
-    return {
-        notes: root.notes,
-        paragraphs: Loader.loaded({
-            items: root.paragraphs.data.items.concat(newParagraph),
-        }),
-    };
+    return Loader.loaded({
+        ...root.data,
+        paragraphs: root.data.paragraphs.concat(newParagraph),
+    });
 }
 
 /**
@@ -42,20 +40,21 @@ export function FX(
     });
 
     async function effect([root, title]: [Root, string]) {
-        if (!title || Loader.isLoading(root.notes) || Loader.isLoading(root.paragraphs)) {
+        if (!title || Loader.isLoading(root)) {
             return;
         }
-        const selectedNote = root.notes.data.selected;
-        const paragraphs = root.paragraphs.data.items;
+
+        const { paragraphs, selected } = root.data;
+
         const newParagraph = Paragraph.setPosition(
             Paragraph.make(title),
-            Paragraph.getNextPosition(paragraphs, selectedNote),
-            selectedNote,
+            Paragraph.getNextPosition(paragraphs, selected),
+            selected,
         );
 
         actions.addParagraph(newParagraph);
         paragraphService.set(newParagraph);
-        const newParagraphs = await paragraphService.getByParentId(selectedNote);
-        actions.paragraphsLoaded(newParagraphs);
+        const newParagraphs = await paragraphService.getByParentId(selected);
+        actions.paragraphsLoaded(newParagraphs)
     }
 }

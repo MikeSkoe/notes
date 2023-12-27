@@ -1,17 +1,19 @@
 import { useStoreMap } from "effector-react";
 import { useContext } from "react";
 
-import { Loader, LoaderJSX, Store, UseCase } from "../..";
+import { Loader, LoaderJSX, Store } from "../..";
 
 import { Item } from "./item";
 
 export function List() {
-   const store = useContext(Store.StoreContext);
-   const notes = useStoreMap<UseCase.Root, Loader.T<UseCase.Notes>>(store, store => store.notes);
+    const root$ = useContext(Store.StoreContext);
+    const partialRoot = useStoreMap(root$, root =>
+        Loader.map(root, ({ notes, selected }) => ({ notes, selected })),
+    );
 
-   return <LoaderJSX.Show loadable={notes}>{notes =>
-      <ul>{notes.items.map(note =>
-         <Item key={note.id} note={note} selectedNote={notes.selected}/> )}
-      </ul>
-   }</LoaderJSX.Show>;
+    return <LoaderJSX.Show loadable={partialRoot}>{({ notes, selected }) =>
+        <ul>{notes.map(note =>
+            <Item key={note.id} note={note} selectedNote={selected}/> )}
+        </ul>
+    }</LoaderJSX.Show>;
 };

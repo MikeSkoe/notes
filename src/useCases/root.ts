@@ -2,21 +2,19 @@ import { EventCallable } from "effector";
 
 import { Loader, Note, Paragraph } from "..";
 
-export type Notes = { items: Note.T[], selected: Note.T["id"] };
-export type Paragraphs = { items: Paragraph.T[] };
-export type Root = {
-    notes: Loader.T<Notes>;
-    paragraphs: Loader.T<Paragraphs>;
-}
-
-export const EMPTY: Root = {
-    notes: Loader.loading(),
-    paragraphs: Loader.loading(),
+export type T = {
+    notes: Note.T[];
+    selected: Note.T["id"];
+    paragraphs: Paragraph.T[];
 };
+
+export type Root = Loader.T<T>;
+
+export const EMPTY: Root = Loader.loading();
 
 export interface Actions {
     init: EventCallable<void>;
-    notesLoaded: EventCallable<[Note.T["id"], Note.T[]]>;
+    loaded: EventCallable<T>;
     paragraphsLoaded: EventCallable<Paragraph.T[]>;
     selectNote: EventCallable<Note.T["id"]>;
     addNewNote: EventCallable<string>;

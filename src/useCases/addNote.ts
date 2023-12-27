@@ -11,18 +11,11 @@ export function preAction(root: Root, _title: string): Root {
 }
 
 export function action(root: Root, newNote: Note.T): Root {
-    const loadedNotes: Note.T[] = Loader.getWithDefault(
-        Loader.map(root.notes, ({ items }) => items),
-        [],
-    );
-
-    return {
-        notes: Loader.loaded({
-            items: loadedNotes.concat(newNote),
-            selected: newNote.id,
-        }),
-        paragraphs: Loader.loading(),
-    };
+    return Loader.map(root, state => ({
+        ...state,
+        notes: state.notes.concat(newNote),
+        selectedNote: newNote,
+    }));
 }
 
 /**
@@ -42,9 +35,14 @@ export function FX(
         const newNote = Note.make(title);
         actions.addNote(newNote);
         await noteService.set(newNote);
-        const newNotes = await noteService.getAll();
-        actions.notesLoaded([newNote.id, newNotes]);
-        const newParagraphs = await paragraphService.getByParentId(newNote.id);
-        actions.paragraphsLoaded(newParagraphs);
+        const [notes, paragraphs] = await Promise.all([
+            noteService.getAll(),
+            paragraphService.getByParentId(newNote.id),
+        ]);
+        actions.loaded({
+            notes,
+            paragraphs,
+            selected: newNote.id,
+        })
     }
 }

@@ -1,16 +1,18 @@
 import { useStoreMap } from "effector-react";
 import { useContext } from "react";
 
-import { LoaderJSX, Store } from "../..";
+import { Loader, LoaderJSX, Store } from "../..";
 
 import { Item } from "./item";
 
 export function List() {
-    const store = useContext(Store.StoreContext);
-    const loadableParagraphs = useStoreMap(store, store => store.paragraphs);
+    const root$ = useContext(Store.StoreContext);
+    const loadableParagraphs = useStoreMap(root$, root =>
+        Loader.map(root, ({ paragraphs }) => paragraphs),
+    );
 
     return <LoaderJSX.Show loadable={loadableParagraphs}>{paragraphs =>
-        <ul>{paragraphs.items.map(paragraph =>
+        <ul>{paragraphs.map(paragraph =>
             <Item key={paragraph.id} paragraph={paragraph} />)
         }</ul>
     }</LoaderJSX.Show>;

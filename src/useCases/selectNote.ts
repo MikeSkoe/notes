@@ -6,16 +6,14 @@ import { Root, Actions } from "./root";
 
 // Select a note
 
-export function action(root: Root, newSelected: Note.T["id"]): Root | void {
-    if (!Loader.isLoaded(root.notes) || root.notes.data.selected === newSelected) { return; }
-
-    return {
-        ...root,
-        notes: Loader.loaded({
-            items: root.notes.data.items,
-            selected: newSelected,
-        }),
-    };
+export function action(root: Root, selected: Note.T["id"]): Root | void {
+    if (Loader.isLoading(root) || root.data.selected === selected) {
+        return;
+    }
+    return Loader.map(root, state => ({
+        ...state,
+        selected,
+    }))
 }
 
 /**

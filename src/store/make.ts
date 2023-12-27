@@ -9,7 +9,7 @@ export function make(
     const app$ = createStore(UseCase.EMPTY);
     const api = createApi(app$, {
         init: UseCase.init.action,
-        notesLoaded: UseCase.init.notesLoaded,
+        loaded: UseCase.init.loaded,
         paragraphsLoaded: UseCase.init.paragraphsLoaded,
         selectNote: UseCase.selectNote.action,
         addNote: UseCase.addNote.action,
@@ -22,7 +22,7 @@ export function make(
 
     const selectedNote$ = app$.map(
         state => Loader.getWithDefault(
-            Loader.map(state.notes, ({ selected }) => selected),
+            Loader.map(state, ({ selected }) => selected),
             Note.UNSORTED.id,
         ),
     );
