@@ -21,7 +21,7 @@ test("Delete paragraph", async () => {
         expect(getByText(Paragraph.EMPTY.title)).toBeInTheDocument()
     });
 
-    await user.click(getByText(/delete paragraph/i));
+    await user.click(getByText(/delete/i));
 
     expect(queryByText(Paragraph.EMPTY.title)).toBeNull();
 });
