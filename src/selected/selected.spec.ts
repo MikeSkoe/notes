@@ -49,7 +49,21 @@ describe("selected", () => {
 		)).toEqual(["A", "B"])
 	});
 
-	it("should go back and fourth in history", () => {
+	it("goes back and fourth in history", () => {
+		expect(getCurrent(
+			FP.pipe(
+				back,
+				back,
+			)(make("A"))
+		)).toEqual(["A"])
+
+		expect(getCurrent(
+			FP.pipe(
+				front,
+				front,
+			)(make("A"))
+		)).toEqual(["A"])
+
 		expect(getCurrent(
 			FP.pipe(
 				add("B"),

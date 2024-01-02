@@ -1,6 +1,6 @@
 import { Store, createApi, createStore } from "effector";
 
-import { Loader, Note, Paragraph, Service, UseCase } from "..";
+import { Loader, Note, Paragraph, Selected, Service, UseCase } from "..";
 
 export function make(
    noteService: Service.Service<Note.T>,
@@ -8,29 +8,31 @@ export function make(
 ): [Store<UseCase.Root>, UseCase.Actions] {
     const app$ = createStore(UseCase.EMPTY);
     const api = createApi(app$, {
-        init: UseCase.init.action,
-        loaded: UseCase.init.loaded,
-        paragraphsLoaded: UseCase.init.paragraphsLoaded,
+        init: UseCase.init.init,
+        initialLoaded: UseCase.init.initlaLoaded,
+        pageLoaded: UseCase.init.pageLoaded,
         selectNote: UseCase.selectNote.action,
-        addNote: UseCase.addNote.action,
-        addNewNote: UseCase.addNote.preAction,
-        addParagraph: UseCase.addParagraph.action,
+        addNote: UseCase.addNote.addNote,
+        addParagraph: UseCase.addParagraph.addParagraph,
         addNewParagraph: UseCase.addParagraph.preAction,
         deleteParagraph: UseCase.deleteParagraph.action,
+        updateParagraphs: UseCase.addParagraph.updateParagraphs,
         linkParagraphToNote: UseCase.linkParagraphToNote.action,
+        back: UseCase.router.back, 
+        front: UseCase.router.front, 
     });
 
     const selectedNote$ = app$.map(
         state => Loader.getWithDefault(
-            Loader.map(state, ({ selected }) => selected),
+            Loader.map(state, ({ selected }) => Selected.getLast(Selected.getCurrent(selected)).noteId),
             Note.UNSORTED.id,
         ),
     );
 
     UseCase.init.FX(api, noteService, paragraphService);
-    UseCase.addNote.FX(api, noteService, paragraphService);
+    UseCase.addNote.FX(api, noteService);
     UseCase.addParagraph.FX(api, app$, paragraphService);
-    UseCase.selectNote.FX(api, paragraphService);
+    UseCase.selectNote.FX(api, noteService, paragraphService);
     UseCase.deleteParagraph.FX(api, selectedNote$, paragraphService);
     UseCase.linkParagraphToNote.FX(api, selectedNote$, paragraphService);
 

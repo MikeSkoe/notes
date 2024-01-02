@@ -1,21 +1,27 @@
 import { createEffect, sample } from "effector";
 
-import { Service, Note, Paragraph, Loader } from "..";
+import { Service, Note, Paragraph, Loader, Selected } from "..";
 
-import { Root, T, Actions, EMPTY } from "./root";
+import { Root, Actions, EMPTY, Page } from "./root";
 
 // Initialize the application
 
-export function action(): Root {
+export function init(): Root {
     return EMPTY;
 }
 
-export function loaded(_: Root, state: T): Root {
-    return Loader.loaded(state);
+export function initlaLoaded(_: Root, [noteId, notes, paragraphs]: [Note.T["id"], Note.T[], Paragraph.T[]]): Root {
+    return Loader.loaded({
+        notes,
+        selected: Selected.make({ noteId, paragraphs }),
+    });
 };
 
-export function paragraphsLoaded(root: Root, paragraphs: Paragraph.T[]): Root {
-    return Loader.map(root, state => ({...state, paragraphs }));
+export function pageLoaded(root: Root, page: Page): Root {
+    return Loader.map(root, state => ({
+        notes: state.notes,
+        selected: Selected.add(page)(state.selected),
+    }));
 }
 
 /**
@@ -40,10 +46,6 @@ export function FX(
             paragraphService.getByParentId(Note.UNSORTED.id),
         ]);
 
-        actions.loaded({
-            notes,
-            paragraphs,
-            selected: Note.UNSORTED.id,
-        });
+        actions.initialLoaded([Note.UNSORTED.id, notes, paragraphs]);
     }
 }

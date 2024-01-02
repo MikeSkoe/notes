@@ -16,7 +16,7 @@ function Link({ paragraph }: LinkProps) {
         return <button
             onClick={() => {
                 if (Option.isSome(paragraph.noteLink)) {
-                    actions.selectNote(paragraph.noteLink.data);
+                    actions.selectNote([paragraph.noteLink.data, false]);
                 }
             }}
         >

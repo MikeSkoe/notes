@@ -1,19 +1,25 @@
 import { Unit, createEffect, sample } from "effector";
 
-import { Loader, Note, Paragraph, Service } from "..";
+import { Loader, Note, Paragraph, Selected, Service } from "..";
 
-import { Root, Actions } from "./root";
+import { Root, Actions, Page } from "./root";
 
 // Delete paragraph
+
+// TODO: replace pure functions with effector's events and effects.
+// Depend effects directly to events/effect instead an `Actions` interface
 
 export function action(root: Root, id: Paragraph.T["id"]): Root | void {
     if (Loader.isLoading(root)) {
         return;
     }
 
-    return Loader.map(root, state => ({
-        ...state,
-        paragraphs: state.paragraphs.filter(pr => pr.id !== id),
+    return Loader.map(root, ({ notes, selected }) => ({
+        notes,
+        selected: Selected.update<Page>(({ noteId, paragraphs }) => ({
+            noteId,
+            paragraphs: paragraphs.filter(p => p.id !== id),
+        }))(selected)
     }));
 }
 
@@ -37,7 +43,10 @@ export function FX(
 
     async function effect([noteId, paragraphId]: [Note.T["id"], Paragraph.T["id"]]) {
         await paragraphService.delete(paragraphId);
-        const paragraphs = await paragraphService.getByParentId(noteId);
-        actions.paragraphsLoaded(paragraphs);
+
+        actions.pageLoaded({
+            noteId,
+            paragraphs: await paragraphService.getByParentId(noteId),
+        });
     }
 }

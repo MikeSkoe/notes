@@ -2,6 +2,8 @@ export type Loading<_> = { status: "loading" };
 export type Loaded<A> = { status: "loaded", data: A };
 export type T<A> = Loaded<A> | Loading<A>
 
+export type Unwrap<TA> = TA extends T<infer A> ? A : TA;
+
 export const loading = <A>(): Loading<A> => ({ status: "loading" });
 export const loaded = <A>(data: A): Loaded<A> => ({ status: "loaded", data });
 

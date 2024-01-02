@@ -11,7 +11,7 @@ const [mainStore, mainActions] = make(
 );
 
 export const StoreContext = createContext<EffectorStore<UseCase.Root>>(mainStore);
-export const ActionContext = createContext<Omit<UseCase.Actions, "addNote" | "addParagraph">>(mainActions);
+export const ActionContext = createContext<Omit<UseCase.Actions, "addParagraph">>(mainActions);
 
 type Props = PropsWithChildren<{
     store?: Store<UseCase.Root>,

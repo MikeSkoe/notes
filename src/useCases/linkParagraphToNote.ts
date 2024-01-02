@@ -1,18 +1,23 @@
 import { createEffect, sample, Unit } from "effector";
 
-import { Loader, Note, Paragraph, Service } from "..";
+import { Loader, Note, Paragraph, Selected, Service } from "..";
 
-import { Actions, Root } from "./root";
+import { Actions, Page, Root } from "./root";
+
+// Make a paragraph link to another note
 
 export function action(
 	root: Root,
-	[paragraphId, noteId]: [Paragraph.T["id"], Note.T["id"]],
+	[paragraphId, linkTo]: [Paragraph.T["id"], Note.T["id"]],
 ): Root {
-	return Loader.map(root, state => ({
-		...state,
-		paragraphs: state.paragraphs.map(p => p.id === paragraphId
-			? Paragraph.linkToNote(p, noteId)
-			: p),
+	return Loader.map(root, ({ notes, selected }) => ({
+		notes,
+		selected: Selected.update<Page>(({ noteId, paragraphs }) => ({
+			noteId,
+			paragraphs: paragraphs.map(paragraph => paragraph.id === paragraphId
+				? Paragraph.linkToNote(paragraph, linkTo)
+				: paragraph)
+		}))(selected),
 	}));
 }
 
@@ -35,7 +40,8 @@ export function FX(
 	}) {
 		const paragraph = await paragraphService.get(paragraphId);
 		await paragraphService.set(Paragraph.linkToNote(paragraph, noteId));
-		const newParagraphs = await paragraphService.getByParentId(selectedNote);
-		actions.paragraphsLoaded(newParagraphs);
+		actions.updateParagraphs(
+			await paragraphService.getByParentId(selectedNote),
+		);
 	}
 }

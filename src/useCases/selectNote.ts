@@ -1,19 +1,13 @@
 import { createEffect, sample } from "effector";
 
-import { Loader, Note, Paragraph, Service } from "..";
+import { Note, Paragraph, Service } from "..";
 
 import { Root, Actions } from "./root";
 
 // Select a note
 
-export function action(root: Root, selected: Note.T["id"]): Root | void {
-    if (Loader.isLoading(root) || root.data.selected === selected) {
-        return;
-    }
-    return Loader.map(root, state => ({
-        ...state,
-        selected,
-    }))
+export function action(root: Root, []: [Note.T["id"], boolean]): Root | void {
+    return root;
 }
 
 /**
@@ -21,13 +15,18 @@ export function action(root: Root, selected: Note.T["id"]): Root | void {
  */
 export function FX(
     actions: Actions,
+    noteService: Service.Service<Note.T>,
     paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
 ) {
     return sample({
         clock: actions.selectNote,
-        target: createEffect(async (noteId: Note.T["id"]) => {
+        target: createEffect(async ([noteId, force]: [Note.T["id"], boolean]) => {
             const paragraphs = await paragraphService.getByParentId(noteId);
-            actions.paragraphsLoaded(paragraphs);
+            if (force) {
+                actions.initialLoaded([noteId, await noteService.getAll(), paragraphs]);
+                return;
+            }
+            actions.pageLoaded({ noteId, paragraphs });
         }),
     });
 }

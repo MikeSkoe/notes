@@ -3,6 +3,8 @@ export type T<A> = {
 	pointer: number,
 };
 
+export type Unwrap<TA> = TA extends T<infer A> ? A : TA;
+
 export function make<A>(a: A): T<A> {
 	return {
 		history: [a],
@@ -17,6 +19,10 @@ export function getCurrent<A>({ history, pointer }: T<A>): [A] | [A, A] {
 	];
 }
 
+export function getLast<A>(a: [A] | [A, A]): A {
+	return a[a.length - 1];
+}
+
 export function add<A>(a: A): (t: T<A>) => T<A> {
 	return function addFor({ history, pointer }) {
 		const newHistory = history.slice(0, pointer + 2).concat(a);
@@ -28,6 +34,19 @@ export function add<A>(a: A): (t: T<A>) => T<A> {
 			)),
 		};
 	};
+}
+
+export function update<A>(fn: (a: A) => A): (t: T<A>) => T<A> {
+	return function updateFor({ history, pointer }) {
+		return {
+			history: history.map(
+				(item, index) => index === (history.length - 1)
+					? fn(item)
+					: item,
+			),
+			pointer,
+		}
+	}
 }
 
 export function append<A>(as: A[]): (t: T<A>) => T<A> {
@@ -46,6 +65,6 @@ export function back<A>({ history, pointer }: T<A>): T<A> {
 export function front<A>({ history, pointer }: T<A>): T<A> {
 	return {
 		history: history,
-		pointer: Math.min(history.length - 2, pointer + 1),
+		pointer: Math.max(0, Math.min(history.length - 2, pointer + 1)),
 	};
 }

@@ -1,21 +1,10 @@
 import { Unit, createEffect, sample } from "effector";
 
-import { Service, Loader, Note, Paragraph } from "..";
+import { Service, Loader, Note, Paragraph, Selected, FP } from "..";
 
-import { Root, Actions } from "./root";
+import { Root, Actions, Page } from "./root";
 
 // Add paragraph
-
-export function action(root: Root, newParagraph: Paragraph.T): Root | void {
-    if (!newParagraph.title || Loader.isLoading(root)) {
-        return;
-    }
-
-    return Loader.loaded({
-        ...root.data,
-        paragraphs: root.data.paragraphs.concat(newParagraph),
-    });
-}
 
 /**
  * Takes string, so that effect generates a new paragraph based on it and use it with both action and service
@@ -23,6 +12,29 @@ export function action(root: Root, newParagraph: Paragraph.T): Root | void {
 export function preAction(root: Root, _: string): Root | void {
     return root;
 } 
+
+export function addParagraph(root: Root, newParagraph: Paragraph.T): Root | void {
+    if (!newParagraph.title || Loader.isLoading(root)) {
+        return;
+    }
+
+    return Loader.map(root, ({ notes, selected }) => ({
+        notes,
+        selected: Selected.update<Page>(
+            ({ noteId, paragraphs }) => ({
+                noteId,
+                paragraphs: paragraphs.concat(newParagraph),
+            }),
+        )(selected),
+    }));
+}
+
+export function updateParagraphs(root: Root, paragraphs: Paragraph.T[]): Root {
+    return Loader.map(root, ({ notes, selected }) => ({
+        notes,
+        selected: Selected.update<Page>(({ noteId }) => ({ noteId, paragraphs }))(selected),
+    }))
+}
 
 /**
  * Add a new paragraph to the service and load the new list of paragraphs
@@ -44,17 +56,20 @@ export function FX(
             return;
         }
 
-        const { paragraphs, selected } = root.data;
+        const { paragraphs, noteId } = FP.pipe(
+            Selected.getCurrent,
+            Selected.getLast,
+        )(root.data.selected);
 
         const newParagraph = Paragraph.setPosition(
             Paragraph.make(title),
-            Paragraph.getNextPosition(paragraphs, selected),
-            selected,
+            Paragraph.getNextPosition(paragraphs, noteId),
+            noteId,
         );
 
         actions.addParagraph(newParagraph);
-        paragraphService.set(newParagraph);
-        const newParagraphs = await paragraphService.getByParentId(selected);
-        actions.paragraphsLoaded(newParagraphs)
+        await paragraphService.set(newParagraph);
+
+        actions.updateParagraphs(await paragraphService.getByParentId(noteId));
     }
 }
