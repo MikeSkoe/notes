@@ -1,15 +1,17 @@
-import { Unit, createEffect, sample } from "effector";
+import { Unit, createEffect, sample, createEvent } from "effector";
 
 import { Loader, Note, Paragraph, Selected, Service } from "..";
 
-import { Root, Actions, Page } from "./root";
+import { pageLoaded } from "./init";
+import { Root, Page } from "./root";
 
 // Delete paragraph
 
-// TODO: replace pure functions with effector's events and effects.
-// Depend effects directly to events/effect instead an `Actions` interface
+// --- Events ---
+export const deleteParagraph = createEvent<Paragraph.T["id"]>();
 
-export function action(root: Root, id: Paragraph.T["id"]): Root | void {
+// --- Reducers ---
+export function onDeleteParagraph(root: Root, id: Paragraph.T["id"]): Root | void {
     if (Loader.isLoading(root)) {
         return;
     }
@@ -23,19 +25,13 @@ export function action(root: Root, id: Paragraph.T["id"]): Root | void {
     }));
 }
 
-/**
- * Delete the paragraph from service and load the new list
- * @param actions Store actions api
- * @param selectedNote$ Current selected note
- * @param paragraphService 
- */
-export function FX(
-    actions: Actions,
+// --- FXs ---
+export function deleteParagraphFX(
     selectedNote$: Unit<Note.T["id"]>,
     paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
 ) {
     return sample({
-        clock: actions.deleteParagraph,
+        clock: deleteParagraph,
         source: selectedNote$,
         fn: (noteId: Note.T["id"], paragraphId: Paragraph.T["id"]) => [noteId, paragraphId] as const,
         target: createEffect(effect),
@@ -44,7 +40,7 @@ export function FX(
     async function effect([noteId, paragraphId]: [Note.T["id"], Paragraph.T["id"]]) {
         await paragraphService.delete(paragraphId);
 
-        actions.pageLoaded({
+        pageLoaded({
             noteId,
             paragraphs: await paragraphService.getByParentId(noteId),
         });

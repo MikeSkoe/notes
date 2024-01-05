@@ -1,12 +1,17 @@
-import { createEffect, sample, Unit } from "effector";
+import { createEffect, createEvent, sample, Unit } from "effector";
 
 import { Loader, Note, Paragraph, Selected, Service } from "..";
+import { updateParagraphs } from "./addParagraph";
 
-import { Actions, Page, Root } from "./root";
+import { Page, Root } from "./root";
 
 // Make a paragraph link to another note
 
-export function action(
+// --- Events ---
+export const linkParagraphToNote = createEvent<[Paragraph.T["id"], Note.T["id"]]>();
+
+// --- Reducers ---
+export function onLinkParagraphToNote(
 	root: Root,
 	[paragraphId, linkTo]: [Paragraph.T["id"], Note.T["id"]],
 ): Root {
@@ -21,13 +26,13 @@ export function action(
 	}));
 }
 
-export function FX(
-	actions: Actions,
+// --- FXs ---
+export function linkParagraphToNoteFX(
     selectedNote$: Unit<Note.T["id"]>,
     paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
 ) {
 	sample({
-		clock: actions.linkParagraphToNote,
+		clock: linkParagraphToNote,
 		fn: (selectedNote, [paragraphId, noteId]) => ({ selectedNote, paragraphId, noteId } as const),
 		source: selectedNote$,
 		target: createEffect(effect),
@@ -40,7 +45,7 @@ export function FX(
 	}) {
 		const paragraph = await paragraphService.get(paragraphId);
 		await paragraphService.set(Paragraph.linkToNote(paragraph, noteId));
-		actions.updateParagraphs(
+		updateParagraphs(
 			await paragraphService.getByParentId(selectedNote),
 		);
 	}

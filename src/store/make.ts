@@ -1,4 +1,4 @@
-import { Store, createApi, createStore } from "effector";
+import { Store, createStore } from "effector";
 
 import { Loader, Note, Paragraph, Selected, Service, UseCase } from "..";
 
@@ -6,21 +6,18 @@ export function make(
    noteService: Service.Service<Note.T>,
    paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
 ): [Store<UseCase.Root>, UseCase.Actions] {
-    const app$ = createStore(UseCase.EMPTY);
-    const api = createApi(app$, {
-        init: UseCase.init.init,
-        initialLoaded: UseCase.init.initlaLoaded,
-        pageLoaded: UseCase.init.pageLoaded,
-        selectNote: UseCase.selectNote.action,
-        addNote: UseCase.addNote.addNote,
-        addParagraph: UseCase.addParagraph.addParagraph,
-        addNewParagraph: UseCase.addParagraph.preAction,
-        deleteParagraph: UseCase.deleteParagraph.action,
-        updateParagraphs: UseCase.addParagraph.updateParagraphs,
-        linkParagraphToNote: UseCase.linkParagraphToNote.action,
-        back: UseCase.router.back, 
-        front: UseCase.router.front, 
-    });
+    const app$ = createStore(UseCase.EMPTY)
+        .on(UseCase.init, UseCase.onInit)
+        .on(UseCase.initialLoaded, UseCase.onInitalLoaded)
+        .on(UseCase.pageLoaded, UseCase.onPageLoaded)
+        .on(UseCase.addNote, UseCase.onAddNote)
+        .on(UseCase.addParagraph, UseCase.onAddParagraph)
+        .on(UseCase.updateParagraphs, UseCase.onUpdateParagraphs)
+        .on(UseCase.deleteParagraph, UseCase.onDeleteParagraph)
+        .on(UseCase.selectNote, UseCase.onSelectNote)
+        .on(UseCase.linkParagraphToNote, UseCase.onLinkParagraphToNote)
+        .on(UseCase.back, UseCase.onBack)
+        .on(UseCase.front, UseCase.onFront);
 
     const selectedNote$ = app$.map(
         state => Loader.getWithDefault(
@@ -29,12 +26,24 @@ export function make(
         ),
     );
 
-    UseCase.init.FX(api, noteService, paragraphService);
-    UseCase.addNote.FX(api, noteService);
-    UseCase.addParagraph.FX(api, app$, paragraphService);
-    UseCase.selectNote.FX(api, noteService, paragraphService);
-    UseCase.deleteParagraph.FX(api, selectedNote$, paragraphService);
-    UseCase.linkParagraphToNote.FX(api, selectedNote$, paragraphService);
+    UseCase.initFX(noteService, paragraphService);
+    UseCase.addNoteFX(noteService);
+    UseCase.addParagraphFX(app$, paragraphService);
+    UseCase.selectNoteFX(noteService, paragraphService);
+    UseCase.deleteParagraphFX(selectedNote$, paragraphService);
+    UseCase.linkParagraphToNoteFX(selectedNote$, paragraphService);
 
-    return [app$, api];
+    return [
+        app$,
+        {
+            init: UseCase.init,
+            selectNote: UseCase.selectNote,
+            addNote: UseCase.addNote,
+            addParagraph: UseCase.initParagraph,
+            deleteParagraph: UseCase.deleteParagraph,
+            linkParagraphToNote: UseCase.linkParagraphToNote,
+            back: UseCase.back,
+            front: UseCase.front,
+        },
+    ];
 }

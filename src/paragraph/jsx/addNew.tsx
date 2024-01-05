@@ -5,5 +5,5 @@ import { Store, Input } from "../..";
 export function AddNew() {
 	const actions = useContext(Store.ActionContext);
 
-	return <Input.JSX onSubmit={title => actions.addNewParagraph(title)} />;
+	return <Input.JSX onSubmit={title => actions.addParagraph(title)} />;
 }

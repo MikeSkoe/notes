@@ -1,24 +1,26 @@
-import { createEffect, sample } from "effector";
+import { createEffect, createEvent, sample } from "effector";
 
 import { Service, Note } from "..";
 
-import { Actions, Root } from "./root";
+import { initialLoaded } from "./init";
+import { Root } from "./root";
 
 // Add new note
 
-export function addNote(root: Root, _title: string): Root {
+// --- Events ---
+export const addNote = createEvent<string>();
+
+// --- Reducers ---
+export function onAddNote(root: Root, _title: string): Root {
     return root;
 }
 
-/**
- * Add a new note to with the service and open the note
- */
-export function FX(
-    actions: Actions,
+// --- FXs ---
+export function addNoteFX(
     noteService: Service.Service<Note.T>,
 ) {
     return sample({
-        clock: actions.addNote,
+        clock: addNote,
         target: createEffect<string, void>(effect),
     });
 
@@ -27,6 +29,6 @@ export function FX(
         await noteService.set(newNote);
         const newNotes = await noteService.getAll();
 
-        actions.initialLoaded([newNote.id, newNotes, []]);
+        initialLoaded([newNote.id, newNotes, []]);
     }
 }

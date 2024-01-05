@@ -18,13 +18,9 @@ export const EMPTY: Root = Loader.loading();
 
 export interface Actions {
     init: EventCallable<void>;
-    initialLoaded: EventCallable<[Note.T["id"], Note.T[], Paragraph.T[]]>;
-    pageLoaded: EventCallable<Page>;
     selectNote: EventCallable<[Note.T["id"], boolean]>;
     addNote: EventCallable<string>;
-    addNewParagraph: EventCallable<string>;
-    addParagraph: EventCallable<Paragraph.T>;
-    updateParagraphs: EventCallable<Paragraph.T[]>;
+    addParagraph: EventCallable<string>;
     deleteParagraph: EventCallable<Paragraph.T["id"]>;
     linkParagraphToNote: EventCallable<[Paragraph.T["id"], Note.T["id"]]>;
     back: EventCallable<void>;

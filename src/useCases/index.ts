@@ -1,8 +1,8 @@
 export * from "./root"
-export * as init from "./init";
-export * as addNote from "./addNote";
-export * as addParagraph from "./addParagraph";
-export * as deleteParagraph from "./deleteParagraph";
-export * as selectNote from "./selectNote";
-export * as linkParagraphToNote from "./linkParagraphToNote";
-export * as router from "./router";
+export * from "./init";
+export * from "./addNote";
+export * from "./addParagraph";
+export * from "./deleteParagraph";
+export * from "./selectNote";
+export * from "./linkParagraphToNote";
+export * from "./router";

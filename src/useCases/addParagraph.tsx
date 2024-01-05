@@ -1,19 +1,18 @@
-import { Unit, createEffect, sample } from "effector";
+import { Unit, createEffect, sample, createEvent } from "effector";
 
 import { Service, Loader, Note, Paragraph, Selected, FP } from "..";
 
-import { Root, Actions, Page } from "./root";
+import { Root, Page } from "./root";
 
 // Add paragraph
 
-/**
- * Takes string, so that effect generates a new paragraph based on it and use it with both action and service
- */
-export function preAction(root: Root, _: string): Root | void {
-    return root;
-} 
+// --- Events ---
+export const initParagraph = createEvent<string>();
+export const addParagraph = createEvent<Paragraph.T>();
+export const updateParagraphs = createEvent<Paragraph.T[]>();
 
-export function addParagraph(root: Root, newParagraph: Paragraph.T): Root | void {
+// --- Reducers ---
+export function onAddParagraph(root: Root, newParagraph: Paragraph.T): Root | void {
     if (!newParagraph.title || Loader.isLoading(root)) {
         return;
     }
@@ -29,23 +28,20 @@ export function addParagraph(root: Root, newParagraph: Paragraph.T): Root | void
     }));
 }
 
-export function updateParagraphs(root: Root, paragraphs: Paragraph.T[]): Root {
+export function onUpdateParagraphs(root: Root, paragraphs: Paragraph.T[]): Root {
     return Loader.map(root, ({ notes, selected }) => ({
         notes,
         selected: Selected.update<Page>(({ noteId }) => ({ noteId, paragraphs }))(selected),
     }))
 }
 
-/**
- * Add a new paragraph to the service and load the new list of paragraphs
- */
-export function FX(
-    actions: Actions,
+// --- FXs ---
+export function addParagraphFX(
     root$: Unit<Root>,
     paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
 ) {
     return sample({
-        clock: actions.addNewParagraph,
+        clock: initParagraph,
         source: root$,
         fn: (root: Root, title: string) => [root, title] as const,
         target: createEffect(effect),
@@ -67,9 +63,9 @@ export function FX(
             noteId,
         );
 
-        actions.addParagraph(newParagraph);
+        addParagraph(newParagraph);
         await paragraphService.set(newParagraph);
 
-        actions.updateParagraphs(await paragraphService.getByParentId(noteId));
+        updateParagraphs(await paragraphService.getByParentId(noteId));
     }
 }

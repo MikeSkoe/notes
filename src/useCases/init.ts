@@ -1,42 +1,42 @@
-import { createEffect, sample } from "effector";
+import { createEffect, createEvent, sample } from "effector";
 
 import { Service, Note, Paragraph, Loader, Selected } from "..";
 
-import { Root, Actions, EMPTY, Page } from "./root";
+import { Root, EMPTY, Page } from "./root";
 
 // Initialize the application
 
-export function init(): Root {
+// --- Events ---
+export const init = createEvent();
+export const initialLoaded = createEvent<[Note.T["id"], Note.T[], Paragraph.T[]]>();
+export const pageLoaded = createEvent<Page>();
+
+// --- Reducers ---
+export function onInit(): Root {
     return EMPTY;
 }
 
-export function initlaLoaded(_: Root, [noteId, notes, paragraphs]: [Note.T["id"], Note.T[], Paragraph.T[]]): Root {
+export function onInitalLoaded(_: Root, [noteId, notes, paragraphs]: [Note.T["id"], Note.T[], Paragraph.T[]]): Root {
     return Loader.loaded({
         notes,
         selected: Selected.make({ noteId, paragraphs }),
     });
 };
 
-export function pageLoaded(root: Root, page: Page): Root {
+export function onPageLoaded(root: Root, page: Page): Root {
     return Loader.map(root, state => ({
         notes: state.notes,
         selected: Selected.add(page)(state.selected),
     }));
 }
 
-/**
- * Load notes and paragraphs of the unsorted note
- * @param api store actions
- * @param noteService
- * @param paragraphService
- */
-export function FX(
-    actions: Actions,
+// --- FXs ---
+export function initFX(
     noteService: Service.Service<Note.T>,
     paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
 ) {
     return sample({
-        clock: actions.init,
+        clock: init,
         target: createEffect(effect),
     });
 
@@ -46,6 +46,6 @@ export function FX(
             paragraphService.getByParentId(Note.UNSORTED.id),
         ]);
 
-        actions.initialLoaded([Note.UNSORTED.id, notes, paragraphs]);
+        initialLoaded([Note.UNSORTED.id, notes, paragraphs]);
     }
 }
