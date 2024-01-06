@@ -20,18 +20,19 @@ export function onAddParagraph(root: Root, newParagraph: Paragraph.T): Root | vo
     return Loader.map(root, ({ notes, selected }) => ({
         notes,
         selected: Selected.update<Page>(
+            selected,
             ({ noteId, paragraphs }) => ({
                 noteId,
                 paragraphs: paragraphs.concat(newParagraph),
             }),
-        )(selected),
+        ),
     }));
 }
 
 export function onUpdateParagraphs(root: Root, paragraphs: Paragraph.T[]): Root {
     return Loader.map(root, ({ notes, selected }) => ({
         notes,
-        selected: Selected.update<Page>(({ noteId }) => ({ noteId, paragraphs }))(selected),
+        selected: Selected.update<Page>(selected, ({ noteId }) => ({ noteId, paragraphs })),
     }))
 }
 

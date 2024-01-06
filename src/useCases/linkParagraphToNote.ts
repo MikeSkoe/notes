@@ -8,25 +8,31 @@ import { Page, Root } from "./root";
 // Make a paragraph link to another note
 
 // --- Events ---
+
 export const linkParagraphToNote = createEvent<[Paragraph.T["id"], Note.T["id"]]>();
 
 // --- Reducers ---
+
 export function onLinkParagraphToNote(
 	root: Root,
 	[paragraphId, linkTo]: [Paragraph.T["id"], Note.T["id"]],
 ): Root {
 	return Loader.map(root, ({ notes, selected }) => ({
 		notes,
-		selected: Selected.update<Page>(({ noteId, paragraphs }) => ({
-			noteId,
-			paragraphs: paragraphs.map(paragraph => paragraph.id === paragraphId
-				? Paragraph.linkToNote(paragraph, linkTo)
-				: paragraph)
-		}))(selected),
+		selected: Selected.update<Page>(
+			selected,
+			({ noteId, paragraphs }) => ({
+				noteId,
+				paragraphs: paragraphs.map(paragraph => paragraph.id === paragraphId
+					? Paragraph.linkToNote(paragraph, linkTo)
+					: paragraph)
+			}),
+		),
 	}));
 }
 
 // --- FXs ---
+
 export function linkParagraphToNoteFX(
     selectedNote$: Unit<Note.T["id"]>,
     paragraphService: Service.RelationalService<Note.T, Paragraph.T>,

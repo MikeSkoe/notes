@@ -23,36 +23,30 @@ export function getLast<A>(a: [A] | [A, A]): A {
 	return a[a.length - 1];
 }
 
-export function add<A>(a: A): (t: T<A>) => T<A> {
-	return function addFor({ history, pointer }) {
-		const newHistory = history.slice(0, pointer + 2).concat(a);
+export function add<A>({ history, pointer }: T<A>, a: A): T<A> {
+	const newHistory = history.slice(0, pointer + 2).concat(a);
 
-		return {
-			history: newHistory,
-			pointer: Math.max(0, Math.min(newHistory.length - 2,
-				pointer + 1,
-			)),
-		};
+	return {
+		history: newHistory,
+		pointer: Math.max(0, Math.min(newHistory.length - 2,
+			pointer + 1,
+		)),
 	};
 }
 
-export function update<A>(fn: (a: A) => A): (t: T<A>) => T<A> {
-	return function updateFor({ history, pointer }) {
-		return {
-			history: history.map(
-				(item, index) => index === (history.length - 1)
-					? fn(item)
-					: item,
-			),
-			pointer,
-		}
+export function update<A>({ history, pointer }: T<A>, fn: (a: A) => A): T<A> {
+	return {
+		history: history.map(
+			(item, index) => index === (history.length - 1)
+				? fn(item)
+				: item,
+		),
+		pointer,
 	}
 }
 
-export function append<A>(as: A[]): (t: T<A>) => T<A> {
-	return function appendFor(t) {
-		return as.reduce((acc, a) => add(a)(acc), t);
-	}
+export function append<A>(t: T<A>, as: A[]): T<A> {
+	return as.reduce((acc, a) => add(acc, a), t);
 }
 
 export function back<A>({ history, pointer }: T<A>): T<A> {

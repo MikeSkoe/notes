@@ -8,9 +8,11 @@ import { Root, Page } from "./root";
 // Delete paragraph
 
 // --- Events ---
+
 export const deleteParagraph = createEvent<Paragraph.T["id"]>();
 
 // --- Reducers ---
+
 export function onDeleteParagraph(root: Root, id: Paragraph.T["id"]): Root | void {
     if (Loader.isLoading(root)) {
         return;
@@ -18,14 +20,18 @@ export function onDeleteParagraph(root: Root, id: Paragraph.T["id"]): Root | voi
 
     return Loader.map(root, ({ notes, selected }) => ({
         notes,
-        selected: Selected.update<Page>(({ noteId, paragraphs }) => ({
-            noteId,
-            paragraphs: paragraphs.filter(p => p.id !== id),
-        }))(selected)
+        selected: Selected.update<Page>(
+            selected,
+            ({ noteId, paragraphs }) => ({
+                noteId,
+                paragraphs: paragraphs.filter(p => p.id !== id),
+            }),
+        ),
     }));
 }
 
 // --- FXs ---
+
 export function deleteParagraphFX(
     selectedNote$: Unit<Note.T["id"]>,
     paragraphService: Service.RelationalService<Note.T, Paragraph.T>,

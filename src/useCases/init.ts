@@ -26,7 +26,7 @@ export function onInitalLoaded(_: Root, [noteId, notes, paragraphs]: [Note.T["id
 export function onPageLoaded(root: Root, page: Page): Root {
     return Loader.map(root, state => ({
         notes: state.notes,
-        selected: Selected.add(page)(state.selected),
+        selected: Selected.add(state.selected, page),
     }));
 }
 
