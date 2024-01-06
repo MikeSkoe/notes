@@ -19,9 +19,9 @@ export function onAddParagraph(root: Root, newParagraph: Paragraph.T): Root | vo
         return;
     }
 
-    return Loader.map(root, ({ notes, selected }) => ({
+    return Loader.map(root, ({ notes, history: selected }) => ({
         notes,
-        selected: History.update<Page>(
+        history: History.update<Page>(
             selected,
             ({ noteId, paragraphs }) => ({
                 noteId,
@@ -32,9 +32,9 @@ export function onAddParagraph(root: Root, newParagraph: Paragraph.T): Root | vo
 }
 
 export function onUpdateParagraphs(root: Root, paragraphs: Paragraph.T[]): Root {
-    return Loader.map(root, ({ notes, selected }) => ({
+    return Loader.map(root, ({ notes, history: selected }) => ({
         notes,
-        selected: History.update<Page>(selected, ({ noteId }) => ({ noteId, paragraphs })),
+        history: History.update<Page>(selected, ({ noteId }) => ({ noteId, paragraphs })),
     }))
 }
 
@@ -59,7 +59,7 @@ export function addParagraphFX(
         const { paragraphs, noteId } = FP.pipe(
             History.getCurrent,
             History.getLast,
-        )(root.data.selected);
+        )(root.data.history);
 
         const newParagraph = Paragraph.setPosition(
             Paragraph.make(title),

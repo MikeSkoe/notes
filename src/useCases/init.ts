@@ -19,14 +19,14 @@ export function onInitalLoaded(
 ): Root {
     return Loader.loaded({
         notes,
-        selected: History.make({ noteId, paragraphs }),
+        history: History.make({ noteId, paragraphs }),
     });
 };
 
 export function onPageLoaded(root: Root, page: Page): Root {
     return Loader.map(root, state => ({
         notes: state.notes,
-        selected: History.add(state.selected, page),
+        history: History.add(state.history, page),
     }));
 }
 

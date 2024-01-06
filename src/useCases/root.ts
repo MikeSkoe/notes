@@ -2,13 +2,13 @@ import { Loader, Note, Paragraph, History } from "..";
 
 export type T = {
     notes: Note.T[];
-    selected: History.T<{
+    history: History.T<{
         noteId: Note.T["id"],
         paragraphs: Paragraph.T[],
     }>;
 };
 
-export type Page = History.Unwrap<T["selected"]>;
+export type Page = History.Unwrap<T["history"]>;
 
 export type Root = Loader.T<T>;
 

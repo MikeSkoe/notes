@@ -18,10 +18,10 @@ export function onDeleteParagraph(root: Root, id: Paragraph.T["id"]): Root | voi
         return;
     }
 
-    return Loader.map(root, ({ notes, selected }) => ({
+    return Loader.map(root, ({ notes, history }) => ({
         notes,
-        selected: History.update<Page>(
-            selected,
+        history: History.update<Page>(
+            history,
             ({ noteId, paragraphs }) => ({
                 noteId,
                 paragraphs: paragraphs.filter(p => p.id !== id),

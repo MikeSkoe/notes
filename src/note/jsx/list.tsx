@@ -10,12 +10,12 @@ export function List() {
     const loadableNotes = useStoreMap(root$, state =>
         Loader.map(state, ({ notes }) => notes));
     const loadableNoteId = useStoreMap(root$, state =>
-        Loader.map(state, ({ selected }) =>
+        Loader.map(state, ({ history }) =>
             FP.pipe(
                 History.getCurrent<UseCase.Page>,
                 History.getLast,
                 ({ noteId }) => noteId,
-            )(selected),
+            )(history),
         )
     );
 

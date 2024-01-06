@@ -12,13 +12,13 @@ export const front = createEvent();
 export function onBack(root: Root): Root {
 	return Loader.map(root, state => ({
 		notes: state.notes,
-		selected: History.back(state.selected),
+		history: History.back(state.history),
 	}))
 }
 
 export function onFront(root: Root): Root {
 	return Loader.map(root, state => ({
 		notes: state.notes,
-		selected: History.front(state.selected),
+		history: History.front(state.history),
 	}))
 }

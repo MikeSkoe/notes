@@ -21,7 +21,7 @@ export function make(
 
     const selectedNote$ = app$.map(
         state => Loader.getWithDefault(
-            Loader.map(state, ({ selected }) => History.getLast(History.getCurrent(selected)).noteId),
+            Loader.map(state, ({ history }) => History.getLast(History.getCurrent(history)).noteId),
             Note.UNSORTED.id,
         ),
     );

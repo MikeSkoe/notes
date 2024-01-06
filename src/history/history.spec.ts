@@ -2,8 +2,8 @@ import { FP } from "..";
 
 import { add, append, back, front, getCurrent, make } from "."
 
-describe("selected", () => {
-	it("should show currect selected pair", () => {
+describe("history", () => {
+	it("should show currect history pair", () => {
 		expect(getCurrent(
 			make("A"),
 		)).toEqual(["A"]);

@@ -8,8 +8,8 @@ import { Item } from "./item";
 export function List() {
     const root$ = useContext(Store.StoreContext);
     const loadablePages = useStoreMap(root$, root =>
-        Loader.map(root, ({ selected }) =>
-            History.getCurrent<UseCase.Page>(selected)),
+        Loader.map(root, ({ history }) =>
+            History.getCurrent<UseCase.Page>(history)),
     );
 
     return <LoaderJSX.Show loadable={loadablePages}>{pages => 

@@ -17,10 +17,10 @@ export function onLinkParagraphToNote(
 	root: Root,
 	[paragraphId, linkTo]: [Paragraph.T["id"], Note.T["id"]],
 ): Root {
-	return Loader.map(root, ({ notes, selected }) => ({
+	return Loader.map(root, ({ notes, history }) => ({
 		notes,
-		selected: History.update<Page>(
-			selected,
+		history: History.update<Page>(
+			history,
 			({ noteId, paragraphs }) => ({
 				noteId,
 				paragraphs: paragraphs.map(paragraph => paragraph.id === paragraphId
