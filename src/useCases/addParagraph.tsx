@@ -1,6 +1,6 @@
 import { Unit, createEffect, sample, createEvent } from "effector";
 
-import { Service, Loader, Note, Paragraph, Selected, FP } from "..";
+import { Service, Loader, Note, Paragraph, History, FP } from "..";
 
 import { Root, Page } from "./root";
 
@@ -21,7 +21,7 @@ export function onAddParagraph(root: Root, newParagraph: Paragraph.T): Root | vo
 
     return Loader.map(root, ({ notes, selected }) => ({
         notes,
-        selected: Selected.update<Page>(
+        selected: History.update<Page>(
             selected,
             ({ noteId, paragraphs }) => ({
                 noteId,
@@ -34,7 +34,7 @@ export function onAddParagraph(root: Root, newParagraph: Paragraph.T): Root | vo
 export function onUpdateParagraphs(root: Root, paragraphs: Paragraph.T[]): Root {
     return Loader.map(root, ({ notes, selected }) => ({
         notes,
-        selected: Selected.update<Page>(selected, ({ noteId }) => ({ noteId, paragraphs })),
+        selected: History.update<Page>(selected, ({ noteId }) => ({ noteId, paragraphs })),
     }))
 }
 
@@ -57,8 +57,8 @@ export function addParagraphFX(
         }
 
         const { paragraphs, noteId } = FP.pipe(
-            Selected.getCurrent,
-            Selected.getLast,
+            History.getCurrent,
+            History.getLast,
         )(root.data.selected);
 
         const newParagraph = Paragraph.setPosition(

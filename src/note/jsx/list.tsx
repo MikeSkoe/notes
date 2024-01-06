@@ -1,7 +1,7 @@
 import { useStoreMap } from "effector-react";
 import { useContext } from "react";
 
-import { FP, Loader, LoaderJSX, Selected, Store, UseCase } from "../..";
+import { FP, Loader, LoaderJSX, History, Store, UseCase } from "../..";
 
 import { Item } from "./item";
 
@@ -12,8 +12,8 @@ export function List() {
     const loadableNoteId = useStoreMap(root$, state =>
         Loader.map(state, ({ selected }) =>
             FP.pipe(
-                Selected.getCurrent<UseCase.Page>,
-                Selected.getLast,
+                History.getCurrent<UseCase.Page>,
+                History.getLast,
                 ({ noteId }) => noteId,
             )(selected),
         )

@@ -1,6 +1,6 @@
 import { Store, createStore } from "effector";
 
-import { Loader, Note, Paragraph, Selected, Service, UseCase } from "..";
+import { Loader, Note, Paragraph, History, Service, UseCase } from "..";
 
 export function make(
    noteService: Service.Service<Note.T>,
@@ -21,7 +21,7 @@ export function make(
 
     const selectedNote$ = app$.map(
         state => Loader.getWithDefault(
-            Loader.map(state, ({ selected }) => Selected.getLast(Selected.getCurrent(selected)).noteId),
+            Loader.map(state, ({ selected }) => History.getLast(History.getCurrent(selected)).noteId),
             Note.UNSORTED.id,
         ),
     );

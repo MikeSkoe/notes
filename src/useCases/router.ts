@@ -1,6 +1,6 @@
 import { createEvent } from "effector";
 
-import { Loader, Selected } from "..";
+import { Loader, History } from "..";
 
 import { Root } from "./root";
 
@@ -12,13 +12,13 @@ export const front = createEvent();
 export function onBack(root: Root): Root {
 	return Loader.map(root, state => ({
 		notes: state.notes,
-		selected: Selected.back(state.selected),
+		selected: History.back(state.selected),
 	}))
 }
 
 export function onFront(root: Root): Root {
 	return Loader.map(root, state => ({
 		notes: state.notes,
-		selected: Selected.front(state.selected),
+		selected: History.front(state.selected),
 	}))
 }

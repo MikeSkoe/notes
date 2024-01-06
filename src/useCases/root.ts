@@ -1,14 +1,14 @@
-import { Loader, Note, Paragraph, Selected } from "..";
+import { Loader, Note, Paragraph, History } from "..";
 
 export type T = {
     notes: Note.T[];
-    selected: Selected.T<{
+    selected: History.T<{
         noteId: Note.T["id"],
         paragraphs: Paragraph.T[],
     }>;
 };
 
-export type Page = Selected.Unwrap<T["selected"]>;
+export type Page = History.Unwrap<T["selected"]>;
 
 export type Root = Loader.T<T>;
 

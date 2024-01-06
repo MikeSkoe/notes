@@ -1,6 +1,6 @@
 import { createEffect, createEvent, sample } from "effector";
 
-import { Service, Note, Paragraph, Loader, Selected } from "..";
+import { Service, Note, Paragraph, Loader, History } from "..";
 
 import { Root, Page } from "./root";
 
@@ -19,14 +19,14 @@ export function onInitalLoaded(
 ): Root {
     return Loader.loaded({
         notes,
-        selected: Selected.make({ noteId, paragraphs }),
+        selected: History.make({ noteId, paragraphs }),
     });
 };
 
 export function onPageLoaded(root: Root, page: Page): Root {
     return Loader.map(root, state => ({
         notes: state.notes,
-        selected: Selected.add(state.selected, page),
+        selected: History.add(state.selected, page),
     }));
 }
 

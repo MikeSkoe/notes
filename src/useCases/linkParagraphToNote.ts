@@ -1,6 +1,6 @@
 import { createEffect, createEvent, sample, Unit } from "effector";
 
-import { Loader, Note, Paragraph, Selected, Service } from "..";
+import { Loader, Note, Paragraph, History, Service } from "..";
 import { updateParagraphs } from "./addParagraph";
 
 import { Page, Root } from "./root";
@@ -19,7 +19,7 @@ export function onLinkParagraphToNote(
 ): Root {
 	return Loader.map(root, ({ notes, selected }) => ({
 		notes,
-		selected: Selected.update<Page>(
+		selected: History.update<Page>(
 			selected,
 			({ noteId, paragraphs }) => ({
 				noteId,
