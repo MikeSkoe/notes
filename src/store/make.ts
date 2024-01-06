@@ -5,7 +5,10 @@ import { Loader, Note, Paragraph, Selected, Service, UseCase } from "..";
 export function make(
    noteService: Service.Service<Note.T>,
    paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
-): [Store<UseCase.Root>, UseCase.Actions] {
+): {
+    store: Store<UseCase.Root>,
+    actions: UseCase.Actions,
+} {
     const app$ = createStore(UseCase.EMPTY)
         .on(UseCase.init, UseCase.onInit)
         .on(UseCase.initialLoaded, UseCase.onInitalLoaded)
@@ -33,9 +36,9 @@ export function make(
     UseCase.deleteParagraphFX(selectedNote$, paragraphService);
     UseCase.linkParagraphToNoteFX(selectedNote$, paragraphService);
 
-    return [
-        app$,
-        {
+    return {
+        store: app$,
+        actions: {
             init: UseCase.init,
             selectNote: UseCase.selectNote,
             addNote: UseCase.addNote,
@@ -44,6 +47,6 @@ export function make(
             linkParagraphToNote: UseCase.linkParagraphToNote,
             back: UseCase.back,
             front: UseCase.front,
-        },
-    ];
+        }
+    };
 }

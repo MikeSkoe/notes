@@ -34,6 +34,15 @@ export function add<A>({ history, pointer }: T<A>, a: A): T<A> {
 	};
 }
 
+export function set<A>({ history, pointer }: T<A>, a: A): T<A> {
+	const newHistory = history.slice(0, pointer).concat(a);
+
+	return {
+		history: newHistory,
+		pointer: pointer,
+	}
+}
+
 export function update<A>({ history, pointer }: T<A>, fn: (a: A) => A): T<A> {
 	return {
 		history: history.map(
@@ -59,6 +68,6 @@ export function back<A>({ history, pointer }: T<A>): T<A> {
 export function front<A>({ history, pointer }: T<A>): T<A> {
 	return {
 		history: history,
-		pointer: Math.max(0, Math.min(history.length - 2, pointer + 1)),
+		pointer: Math.max(0, Math.min(history.length - 1, pointer + 1)),
 	};
 }

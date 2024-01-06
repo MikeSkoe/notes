@@ -6,7 +6,7 @@ import { Service, Note, Paragraph, Store, NoteJSX } from "../..";
 
 test("Add new note", async () => {
    const user = userEvent.setup();
-   const [store, actions] = Store.make(
+   const { store, actions } = Store.make(
       new Service.InMemory<Note.T>([Note.UNSORTED]),
       new Service.RelationalInMemory<Note.T, Paragraph.T>([]),
    );

@@ -1,7 +1,7 @@
 import { useStoreMap } from "effector-react";
 import { useContext } from "react";
 
-import { Loader, LoaderJSX, Selected, Store, UseCase } from "../..";
+import { Loader, LoaderJSX, NoteJSX, Selected, Store, UseCase } from "../..";
 
 import { Item } from "./item";
 
@@ -12,9 +12,9 @@ export function List() {
             Selected.getCurrent<UseCase.Page>(selected)),
     );
 
-    return <LoaderJSX.Show loadable={loadablePages}>{pages =>
+    return <LoaderJSX.Show loadable={loadablePages}>{pages => 
         <ul className="flex">{pages.map(page => <li key={page.noteId}>
-            <p>{page.noteId}</p>
+            <NoteJSX.Title id={page.noteId} />
             <ul>{page.paragraphs.map(paragraph =>
                 <Item key={paragraph.id} paragraph={paragraph} />)
             }</ul>

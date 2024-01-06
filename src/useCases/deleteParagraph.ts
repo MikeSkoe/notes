@@ -1,8 +1,9 @@
 import { Unit, createEffect, sample, createEvent } from "effector";
 
 import { Loader, Note, Paragraph, Selected, Service } from "..";
+import { updateParagraphs } from "./addParagraph";
 
-import { pageLoaded } from "./init";
+import { initialLoaded, pageLoaded } from "./init";
 import { Root, Page } from "./root";
 
 // Delete paragraph
@@ -46,9 +47,6 @@ export function deleteParagraphFX(
     async function effect([noteId, paragraphId]: [Note.T["id"], Paragraph.T["id"]]) {
         await paragraphService.delete(paragraphId);
 
-        pageLoaded({
-            noteId,
-            paragraphs: await paragraphService.getByParentId(noteId),
-        });
+        updateParagraphs(await paragraphService.getByParentId(noteId));
     }
 }

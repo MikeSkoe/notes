@@ -13,11 +13,11 @@ describe("selected", () => {
 		)).toEqual(["A", "B"]);
 
 		expect(getCurrent(
-			append(make("A"), "BC".split("")),
+			append(make("A"), ["B", "C"]),
 		)).toEqual(["B", "C"]);
 
 		expect(getCurrent(
-			append(make("A"), "BCD".split("")),
+			append(make("A"), ["B", "C", "D"]),
 		)).toEqual(["C", "D"])
 	});
 
@@ -31,14 +31,14 @@ describe("selected", () => {
 		expect(getCurrent(
 			FP.pipe(
 				back,
-			)(append(make("A"), "BC".split("")))
+			)(append(make("A"), ["B", "C"]))
 		)).toEqual(["A", "B"]);
 
 		expect(getCurrent(
 			FP.pipe(
 				back,
 				back,
-			)(append(make("A"), "BCD".split("")))
+			)(append(make("A"), ["B", "C", "D"]))
 		)).toEqual(["A", "B"])
 	});
 
@@ -61,14 +61,14 @@ describe("selected", () => {
 			FP.pipe(
 				front,
 			)(add(make("A"), "B"))
-		)).toEqual(["A", "B"]);
+		)).toEqual(["B"]);
 
 		expect(getCurrent(
 			FP.pipe(
 				back,
 				back,
 				front,
-			)(append(make("A"), "BCD".split("")))
+			)(append(make("A"), ["B", "C", "D"]))
 		)).toEqual(["B", "C"]);
 
 		expect(getCurrent(
@@ -77,17 +77,17 @@ describe("selected", () => {
 				back,
 				front,
 				front,
-			)(append(make("A"), "BCD".split("")))
+			)(append(make("A"), ["B", "C", "D"]))
 		)).toEqual(["C", "D"]);
 	});
 
 	it("should slice history if append at the middle", () => {
 		expect(getCurrent(
-			add(back(append(make("A"), "BCD".split(""))), "X")
+			add(back(append(make("A"), ["B", "C", "D"])), "X")
 		)).toEqual(["C", "X"]);
 
 		expect(getCurrent(
-			add(back(back(append(make("A"), "BCD".split("")))), "X")
+			add(back(back(append(make("A"), ["B", "C", "D"]))), "X")
 		)).toEqual(["B", "X"]);
 	})
 });

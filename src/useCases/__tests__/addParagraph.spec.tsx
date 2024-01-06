@@ -6,7 +6,7 @@ import { Service, Note, Paragraph, Store, ParagraphJSX } from "../..";
 
 test("Add new paragraph", async () => {
     const user = userEvent.setup();
-    const [store, actions] = Store.make(
+    const { store, actions } = Store.make(
         new Service.InMemory<Note.T>([Note.UNSORTED]),
         new Service.RelationalInMemory<Note.T, Paragraph.T>([Paragraph.EMPTY]),
     );

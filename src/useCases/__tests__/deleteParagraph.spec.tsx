@@ -6,7 +6,7 @@ import { Note, Paragraph, ParagraphJSX, Service, Store } from "../..";
 
 test("Delete paragraph", async () => {
     const user = userEvent.setup();
-    const [store, actions] = Store.make(
+    const { store, actions } = Store.make(
         new Service.InMemory<Note.T>([Note.UNSORTED]),
         new Service.RelationalInMemory<Note.T, Paragraph.T>([Paragraph.EMPTY]),
     );
@@ -17,10 +17,7 @@ test("Delete paragraph", async () => {
         </Store.Provider>
     );
 
-    await waitFor(() => {
-        expect(getByText(Paragraph.EMPTY.title)).toBeInTheDocument()
-    });
-
+    await waitFor(() => expect(getByText(Paragraph.EMPTY.title)).toBeInTheDocument());
     await user.click(getByText(/delete/i));
 
     expect(queryByText(Paragraph.EMPTY.title)).toBeNull();
