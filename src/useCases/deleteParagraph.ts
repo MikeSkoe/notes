@@ -3,7 +3,6 @@ import { Unit, createEffect, sample, createEvent } from "effector";
 import { Loader, Note, Paragraph, Selected, Service } from "..";
 import { updateParagraphs } from "./addParagraph";
 
-import { initialLoaded, pageLoaded } from "./init";
 import { Root, Page } from "./root";
 
 // Delete paragraph

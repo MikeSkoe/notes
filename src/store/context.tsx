@@ -36,7 +36,7 @@ export function Provider({
     store = myStore,
     actions = myActions,
 }: Props) {
-    useEffect(actions.init);
+    useEffect(() => void actions.init());
 
     return <StoreContext.Provider value={store}>
         <ActionContext.Provider value={actions}>

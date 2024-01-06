@@ -1,5 +1,3 @@
-import { EventCallable } from "effector";
-
 import { Loader, Note, Paragraph, Selected } from "..";
 
 export type T = {
@@ -17,12 +15,13 @@ export type Root = Loader.T<T>;
 export const EMPTY: Root = Loader.loading();
 
 export interface Actions {
-    init: EventCallable<void>;
-    selectNote: EventCallable<[Note.T["id"], boolean]>;
-    addNote: EventCallable<string>;
-    addParagraph: EventCallable<string>;
-    deleteParagraph: EventCallable<Paragraph.T["id"]>;
-    linkParagraphToNote: EventCallable<[Paragraph.T["id"], Note.T["id"]]>;
-    back: EventCallable<void>;
-    front: EventCallable<void>;
+    init: () => void;
+    selectNote: (_: [Note.T["id"], boolean]) => void;
+    addNote: (_: string) => void;
+    addParagraph: (_: string) => void;
+    deleteParagraph: (_: Paragraph.T["id"]) => void;
+    linkParagraphToNote: (_: [Paragraph.T["id"], Note.T["id"]]) => void;
+    back: (_: void) => void;
+    front: (_: void) => void;
 }
+

@@ -7,11 +7,13 @@ import { Root, Page } from "./root";
 // Add paragraph
 
 // --- Events ---
+
 export const initParagraph = createEvent<string>();
 export const addParagraph = createEvent<Paragraph.T>();
 export const updateParagraphs = createEvent<Paragraph.T[]>();
 
 // --- Reducers ---
+
 export function onAddParagraph(root: Root, newParagraph: Paragraph.T): Root | void {
     if (!newParagraph.title || Loader.isLoading(root)) {
         return;
@@ -37,6 +39,7 @@ export function onUpdateParagraphs(root: Root, paragraphs: Paragraph.T[]): Root 
 }
 
 // --- FXs ---
+
 export function addParagraphFX(
     root$: Unit<Root>,
     paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
