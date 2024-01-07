@@ -1,14 +1,14 @@
 import { useStoreMap } from "effector-react";
 import { useContext } from "react";
 
-import { FP, Loader, LoaderJSX, History, Store, UseCase } from "../..";
+import { Loader, LoaderJSX, History, Store } from "../..";
 
 import { Item } from "./item";
 
 export function List() {
     const root$ = useContext(Store.StoreContext);
     const loadableNotes = useStoreMap(root$, state =>
-        Loader.map(state, ({ notes }) => notes),
+        Loader.map(state, ({ notes }) => Object.values(notes)),
     );
     const loadableNoteId = useStoreMap(root$, state =>
         Loader.map(state, ({ history }) => History.getLast(History.getCurrent(history))),

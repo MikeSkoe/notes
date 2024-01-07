@@ -1,4 +1,4 @@
-import { createEffect } from "effector";
+import { createEffect, createEvent, sample } from "effector";
 
 import { Service, Note } from "..";
 
@@ -6,14 +6,19 @@ import { initialLoaded } from "./init";
 
 // Add new note
 
-// --- FXs ---
+export const addNote = createEvent<string>();
 
-export function addNoteFX(noteService: Service.Service<Note.T>) {
-    return createEffect<string, void>(async (title: string) => {
+export function onAddNote(noteService: Service.Service<Note.T>) {
+    sample({
+        clock: addNote,
+        target: createEffect(effect),
+    });
+
+    async function effect(title: string) {
         const newNote = Note.make(title);
         await noteService.set(newNote);
         const newNotes = await noteService.getAll();
 
         initialLoaded([newNote.id, newNotes, []]);
-    });
+    }
 }

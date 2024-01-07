@@ -3,15 +3,17 @@ import { PropsWithChildren, createContext, useEffect } from "react";
 
 import { Service, Note, Paragraph, UseCase } from "..";
 
-import { make } from "./make";
+import { make, Actions } from "./make";
 
 const newNote = Note.make("111");
 
+// mock
 const notes = [
     Note.UNSORTED,
     newNote,
 ];
 
+// mock
 const paragraphs = [
     Paragraph.linkToNote(Paragraph.EMPTY, newNote.id),
     Paragraph.setPosition(Paragraph.make("a"), 0, newNote.id),
@@ -24,11 +26,11 @@ const { store: myStore, actions: myActions } = make(
 );
 
 export const StoreContext = createContext<EffectorStore<UseCase.Root>>(myStore);
-export const ActionContext = createContext<UseCase.Actions>(myActions);
+export const ActionContext = createContext<Actions>(myActions);
 
 type Props = PropsWithChildren<{
     store?: Store<UseCase.Root>,
-    actions?: UseCase.Actions,
+    actions?: Actions,
 }>;
 
 export function Provider({

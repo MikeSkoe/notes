@@ -2,22 +2,25 @@ import { Store, createStore } from "effector";
 
 import { Loader, Note, Paragraph, History, Service, UseCase } from "..";
 
+export interface Actions {
+    init: () => void;
+    selectNote: (_: [Note.T["id"], boolean]) => void;
+    addNote: (_: string) => void;
+    addParagraph: (_: string) => void;
+    deleteParagraph: (_: Paragraph.T["id"]) => void;
+    linkParagraphToNote: (_: [Paragraph.T["id"], Note.T["id"]]) => void;
+    back: (_: void) => void;
+    front: (_: void) => void;
+}
+
 export function make(
    noteService: Service.Service<Note.T>,
    paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
 ): {
     store: Store<UseCase.Root>,
-    actions: UseCase.Actions,
+    actions: Actions,
 } {
-    const app$ = createStore(UseCase.EMPTY)
-        .on(UseCase.initialLoaded, UseCase.onInitalLoaded)
-        .on(UseCase.pageLoaded, UseCase.onPageLoaded)
-        .on(UseCase.addParagraph, UseCase.onAddParagraph)
-        .on(UseCase.updateParagraphs, UseCase.onUpdateParagraphs)
-        .on(UseCase.deleteParagraph, UseCase.onDeleteParagraph)
-        .on(UseCase.linkParagraphToNote, UseCase.onLinkParagraphToNote)
-        .on(UseCase.back, UseCase.onBack)
-        .on(UseCase.front, UseCase.onFront);
+    const app$ = createStore(UseCase.EMPTY);
 
     const selectedNote$ = app$.map(
         state => Loader.getWithDefault(
@@ -26,20 +29,21 @@ export function make(
         ),
     );
 
-    const init = UseCase.initFX(noteService, paragraphService);
-    const addNote = UseCase.addNoteFX(noteService);
-    const selectNote = UseCase.selectNoteFX(noteService, paragraphService);
-
-    UseCase.addParagraphFX(app$, paragraphService);
-    UseCase.deleteParagraphFX(selectedNote$, paragraphService);
-    UseCase.linkParagraphToNoteFX(selectedNote$, paragraphService);
+    UseCase.onLoaded(app$, noteService, paragraphService);
+    UseCase.onAddParagraph(app$, paragraphService);
+    UseCase.onUpdateParagraphs(app$);
+    UseCase.onAddNote(noteService);
+    UseCase.onDeleteParagraph(app$, selectedNote$, paragraphService);
+    UseCase.onLinkParagraphToNote(app$, selectedNote$, paragraphService);
+    UseCase.onSelectNote(noteService, paragraphService);
+    UseCase.onRoute(app$);
 
     return {
         store: app$,
         actions: {
-            init,
-            selectNote,
-            addNote,
+            init: UseCase.init,
+            selectNote: UseCase.selectNote,
+            addNote: UseCase.addNote,
             addParagraph: UseCase.initParagraph,
             deleteParagraph: UseCase.deleteParagraph,
             linkParagraphToNote: UseCase.linkParagraphToNote,

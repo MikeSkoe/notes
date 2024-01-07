@@ -13,7 +13,7 @@ type Props = {
 export function Select({ onSelect, goBack, excludeIds }: Props) {
 	const root$ = useContext(Store.StoreContext);
 	const loadableNotes = useStoreMap(root$, root => Loader.map(root, root =>
-		root.notes.filter(note => !excludeIds.includes(note.id)),
+		Object.values(root.notes).filter(note => !excludeIds.includes(note.id)),
 	));
 
 	return <LoaderJSX.Show loadable={loadableNotes}>
