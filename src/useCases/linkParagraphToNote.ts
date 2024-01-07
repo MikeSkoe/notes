@@ -26,16 +26,14 @@ export function onLinkParagraphToNote(
 	function reducer(root: Root, [paragraphId, linkTo]: [Paragraph.T["id"], Note.T["id"]]): Root {
 		return Loader.map(root, state => ({
 			...state,
-			notesParagraphs: Object.keys(state.notesParagraphs).reduce(
-				(acc: Loader.Unwrap<Root>["notesParagraphs"], noteId: Note.T["id"]) => ({
+			paragraphs: Object.values(state.paragraphs).reduce(
+				(acc, paragraph) => ({
 					...acc,
-					[noteId]: state.notesParagraphs[noteId].map(
-						paragraph => paragraph.id === paragraphId
-							? Paragraph.linkToNote(paragraph, linkTo)
-							: paragraph,
-					)
+					[paragraph.id]: paragraph.id === paragraphId
+						? Paragraph.linkToNote(paragraph, linkTo)
+						: paragraph,
 				}),
-				{},
+				{} as Record<Paragraph.T["id"], Paragraph.T>,
 			),
 		}));
 	}

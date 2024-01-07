@@ -30,10 +30,16 @@ export function onDeleteParagraph(
 
         return Loader.map(root, state => ({
             ...state,
+            paragraphs: Object.values(state.paragraphs).reduce(
+                (acc, paragraph) => paragraph.id === id
+                    ? acc
+                    : { ...acc, [paragraph.id]: paragraph },
+                {} as Record<Paragraph.T["id"], Paragraph.T>,
+            ),
             notesParagraphs: Object.keys(state.notesParagraphs).reduce(
                 (acc: Loader.Unwrap<Root>["notesParagraphs"], noteId: Note.T["id"]) => ({
                     ...acc,
-                    [noteId]: state.notesParagraphs[noteId].filter(paragraph => paragraph.id !== id),
+                    [noteId]: state.notesParagraphs[noteId].filter(paragraphId => paragraphId !== id),
                 }),
                 {},
             ),

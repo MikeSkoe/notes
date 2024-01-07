@@ -13,17 +13,15 @@ export function onRoute(store: Store<Root>) {
 
 	function backReducer(root: Root): Root {
 		return Loader.map(root, state => ({
-			notes: state.notes,
+			...state,
 			history: History.back(state.history),
-			notesParagraphs: state.notesParagraphs,
 		}))
 	}
 
 	function frontReducer(root: Root): Root {
 		return Loader.map(root, state => ({
-			notes: state.notes,
+			...state,
 			history: History.front(state.history),
-			notesParagraphs: state.notesParagraphs,
 		}))
 	}
 }

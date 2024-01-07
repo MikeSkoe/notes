@@ -35,9 +35,13 @@ export function onAddParagraph(
             const noteId = History.getLast(History.getCurrent(state.history));
             return {
                 ...state,
+                paragraphs: {
+                    ...state.paragraphs,
+                    [newParagraph.id]: newParagraph,
+                },
                 notesParagraphs: {
                     ...state.notesParagraphs,
-                    [noteId]: state.notesParagraphs[noteId].concat(newParagraph),
+                    [noteId]: state.notesParagraphs[noteId].concat(newParagraph.id),
                 },
             };
         });
@@ -53,9 +57,12 @@ export function onAddParagraph(
             History.getLast,
         )(root.data.history);
 
+        const noteParagraphs = root.data.notesParagraphs[noteId]
+            .map(paragraphId => root.data.paragraphs[paragraphId]);
+
         const newParagraph = Paragraph.setPosition(
             Paragraph.make(title),
-            Paragraph.getNextPosition(root.data.notesParagraphs[noteId], noteId),
+            Paragraph.getNextPosition(noteParagraphs, noteId),
             noteId,
         );
 
@@ -74,9 +81,13 @@ export function onUpdateParagraphs(store: Store<Root>) {
 
             return {
                 ...state,
+                paragraphs: paragraphs.reduce(
+                    (acc, paragraph) => ({ ...acc, [paragraph.id]: paragraph }),
+                    state.paragraphs,
+                ),
                 notesParagraphs: {
                     ...state.notesParagraphs,
-                    [noteId]: paragraphs,
+                    [noteId]: paragraphs.map(({ id }) => id),
                 }
             }
         });

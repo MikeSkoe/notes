@@ -32,9 +32,13 @@ export function onLoaded(
                 (acc, note) => ({ ...acc, [note.id]: note }),
                 {} as Record<Note.T["id"], Note.T>,
             ),
+            paragraphs: paragraphs.reduce(
+                (acc, paragraph) => ({ ...acc, [paragraph.id]: paragraph }),
+                {} as Record<Paragraph.T["id"], Paragraph.T>,
+            ),
             history: History.make(noteId),
             notesParagraphs: {
-                [noteId]: paragraphs,
+                [noteId]: paragraphs.map(({ id }) => id),
             },
         });
     }
@@ -46,9 +50,13 @@ export function onLoaded(
         return Loader.map(root, state => ({
             notes: state.notes,
             history: History.add(state.history, noteId),
+            paragraphs: paragraphs.reduce(
+                (acc, paragraph) => ({...acc, [paragraph.id]: paragraph }),
+                state.paragraphs,
+            ),
             notesParagraphs: {
                 ...state.notesParagraphs,
-                [noteId]: paragraphs,
+                [noteId]: paragraphs.map(({ id }) => id),
             }
         }));
     }

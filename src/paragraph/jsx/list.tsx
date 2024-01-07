@@ -1,7 +1,7 @@
 import { useStoreMap } from "effector-react";
 import { useContext } from "react";
 
-import { Loader, LoaderJSX, NoteJSX, History, Store } from "../..";
+import { Loader, LoaderJSX, NoteJSX, History, Store, Paragraph } from "../..";
 import { isLoading } from "../../loader";
 
 import { Item } from "./item";
@@ -11,10 +11,14 @@ function Page({ noteId }: { noteId: string }) {
     const paragraphs = useStoreMap({
         store: root$,
         keys: [noteId] as const,
-        fn: (state, [id]) =>
-            isLoading(state)
-                ? []
-                : state.data.notesParagraphs[id],
+        fn: (state, [id]): Paragraph.T[] => {
+            if (isLoading(state)) {
+                return [];
+            }
+
+            return state.data.notesParagraphs[id]
+                .map(paragraphId => state.data.paragraphs[paragraphId]);
+        }
     });
 
     return <ul>{paragraphs.map(paragraph =>
