@@ -1,16 +1,10 @@
 import { Loader, Note, Paragraph, History } from "..";
 
-export type T = {
+export type Root = Loader.T<{
     notes: Note.T[];
-    history: History.T<{
-        noteId: Note.T["id"],
-        paragraphs: Paragraph.T[],
-    }>;
-};
-
-export type Page = History.Unwrap<T["history"]>;
-
-export type Root = Loader.T<T>;
+    history: History.T<Note.T["id"]>;
+    notesParagraphs: Record<Note.T["id"], Paragraph.T[]>;
+}>;
 
 export const EMPTY: Root = Loader.loading();
 
@@ -24,4 +18,3 @@ export interface Actions {
     back: (_: void) => void;
     front: (_: void) => void;
 }
-

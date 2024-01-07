@@ -1,9 +1,9 @@
 import { createEffect, createEvent, sample, Unit } from "effector";
 
-import { Loader, Note, Paragraph, History, Service } from "..";
+import { Loader, Note, Paragraph, Service } from "..";
 import { updateParagraphs } from "./addParagraph";
 
-import { Page, Root } from "./root";
+import { Root } from "./root";
 
 // Make a paragraph link to another note
 
@@ -17,16 +17,18 @@ export function onLinkParagraphToNote(
 	root: Root,
 	[paragraphId, linkTo]: [Paragraph.T["id"], Note.T["id"]],
 ): Root {
-	return Loader.map(root, ({ notes, history }) => ({
-		notes,
-		history: History.update<Page>(
-			history,
-			({ noteId, paragraphs }) => ({
-				noteId,
-				paragraphs: paragraphs.map(paragraph => paragraph.id === paragraphId
-					? Paragraph.linkToNote(paragraph, linkTo)
-					: paragraph)
+	return Loader.map(root, state => ({
+		...state,
+		notesParagraphs: Object.keys(state.notesParagraphs).reduce(
+			(acc: Loader.Unwrap<Root>["notesParagraphs"], noteId: Note.T["id"]) => ({
+				...acc,
+				[noteId]: state.notesParagraphs[noteId].map(
+					paragraph => paragraph.id === paragraphId
+						? Paragraph.linkToNote(paragraph, linkTo)
+						: paragraph,
+				)
 			}),
+			{},
 		),
 	}));
 }

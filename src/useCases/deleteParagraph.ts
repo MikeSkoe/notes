@@ -1,9 +1,9 @@
 import { Unit, createEffect, sample, createEvent } from "effector";
 
-import { Loader, Note, Paragraph, History, Service } from "..";
+import { Loader, Note, Paragraph, Service } from "..";
 import { updateParagraphs } from "./addParagraph";
 
-import { Root, Page } from "./root";
+import { Root } from "./root";
 
 // Delete paragraph
 
@@ -18,14 +18,14 @@ export function onDeleteParagraph(root: Root, id: Paragraph.T["id"]): Root | voi
         return;
     }
 
-    return Loader.map(root, ({ notes, history }) => ({
-        notes,
-        history: History.update<Page>(
-            history,
-            ({ noteId, paragraphs }) => ({
-                noteId,
-                paragraphs: paragraphs.filter(p => p.id !== id),
+    return Loader.map(root, state => ({
+        ...state,
+        notesParagraphs: Object.keys(state.notesParagraphs).reduce(
+            (acc: Loader.Unwrap<Root>["notesParagraphs"], noteId: Note.T["id"]) => ({
+                ...acc,
+                [noteId]: state.notesParagraphs[noteId].filter(paragraph => paragraph.id !== id),
             }),
+            {},
         ),
     }));
 }

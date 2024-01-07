@@ -18,6 +18,6 @@ export function selectNoteFX(
             initialLoaded([noteId, await noteService.getAll(), paragraphs]);
             return;
         }
-        pageLoaded({ noteId, paragraphs });
+        pageLoaded([noteId, paragraphs]);
     });
 }

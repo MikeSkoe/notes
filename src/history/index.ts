@@ -3,7 +3,10 @@ export type T<A> = {
 	pointer: number,
 };
 
-export type Unwrap<TA> = TA extends T<infer A> ? A : TA;
+export type Current<A> = [A] | [A, A];
+
+export type Unwrap<TA> = TA extends T<infer A> ? A : never;
+export type UnwrapCurrent<TA> = TA extends Current<infer A> ? A : never;
 
 export function make<A>(a: A): T<A> {
 	return {
@@ -12,14 +15,14 @@ export function make<A>(a: A): T<A> {
 	}
 }
 
-export function getCurrent<A>({ history, pointer }: T<A>): [A] | [A, A] {
+export function getCurrent<A>({ history, pointer }: T<A>): Current<A> {
 	return [
 		history[pointer],
 		...history.slice(pointer + 1, pointer + 2) as [A],
 	];
 }
 
-export function getLast<A>(a: [A] | [A, A]): A {
+export function getLast<A>(a: Current<A>): A {
 	return a[a.length - 1];
 }
 

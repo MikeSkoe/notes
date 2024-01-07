@@ -2,7 +2,7 @@ import { Unit, createEffect, sample, createEvent } from "effector";
 
 import { Service, Loader, Note, Paragraph, History, FP } from "..";
 
-import { Root, Page } from "./root";
+import { Root } from "./root";
 
 // Add paragraph
 
@@ -19,23 +19,29 @@ export function onAddParagraph(root: Root, newParagraph: Paragraph.T): Root | vo
         return;
     }
 
-    return Loader.map(root, ({ notes, history: selected }) => ({
-        notes,
-        history: History.update<Page>(
-            selected,
-            ({ noteId, paragraphs }) => ({
-                noteId,
-                paragraphs: paragraphs.concat(newParagraph),
-            }),
-        ),
-    }));
+    return Loader.map(root, state => {
+        const noteId = History.getLast(History.getCurrent(state.history));
+        return {
+            ...state,
+            notesParagraphs: {
+                ...state.notesParagraphs,
+                [noteId]: state.notesParagraphs[noteId].concat(newParagraph),
+            },
+        };
+    });
 }
 
 export function onUpdateParagraphs(root: Root, paragraphs: Paragraph.T[]): Root {
-    return Loader.map(root, ({ notes, history: selected }) => ({
-        notes,
-        history: History.update<Page>(selected, ({ noteId }) => ({ noteId, paragraphs })),
-    }))
+    return Loader.map(root, state => {
+        const noteId = History.getLast(History.getCurrent(state.history));
+        return {
+            ...state,
+            notesParagraphs: {
+                ...state.notesParagraphs,
+                [noteId]: paragraphs,
+            }
+        }
+    });
 }
 
 // --- FXs ---
@@ -56,14 +62,14 @@ export function addParagraphFX(
             return;
         }
 
-        const { paragraphs, noteId } = FP.pipe(
+        const noteId = FP.pipe(
             History.getCurrent,
             History.getLast,
         )(root.data.history);
 
         const newParagraph = Paragraph.setPosition(
             Paragraph.make(title),
-            Paragraph.getNextPosition(paragraphs, noteId),
+            Paragraph.getNextPosition(root.data.notesParagraphs[noteId], noteId),
             noteId,
         );
 

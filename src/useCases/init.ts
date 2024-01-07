@@ -1,15 +1,15 @@
-import { createEffect, createEvent, sample } from "effector";
+import { createEffect, createEvent } from "effector";
 
 import { Service, Note, Paragraph, Loader, History } from "..";
 
-import { Root, Page } from "./root";
+import { Root } from "./root";
 
 // Initialize the application
 
 // --- Events ---
 
 export const initialLoaded = createEvent<[Note.T["id"], Note.T[], Paragraph.T[]]>();
-export const pageLoaded = createEvent<Page>();
+export const pageLoaded = createEvent<[Note.T["id"], Paragraph.T[]]>();
 
 // --- Reducers ---
 
@@ -19,14 +19,24 @@ export function onInitalLoaded(
 ): Root {
     return Loader.loaded({
         notes,
-        history: History.make({ noteId, paragraphs }),
+        history: History.make(noteId),
+        notesParagraphs: {
+            [noteId]: paragraphs,
+        },
     });
 };
 
-export function onPageLoaded(root: Root, page: Page): Root {
+export function onPageLoaded(
+    root: Root,
+    [noteId, paragraphs]: [Note.T["id"], Paragraph.T[]],
+): Root {
     return Loader.map(root, state => ({
         notes: state.notes,
-        history: History.add(state.history, page),
+        history: History.add(state.history, noteId),
+        notesParagraphs: {
+            ...state.notesParagraphs,
+            [noteId]: paragraphs,
+        }
     }));
 }
 

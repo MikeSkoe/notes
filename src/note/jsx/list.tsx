@@ -8,15 +8,10 @@ import { Item } from "./item";
 export function List() {
     const root$ = useContext(Store.StoreContext);
     const loadableNotes = useStoreMap(root$, state =>
-        Loader.map(state, ({ notes }) => notes));
+        Loader.map(state, ({ notes }) => notes),
+    );
     const loadableNoteId = useStoreMap(root$, state =>
-        Loader.map(state, ({ history }) =>
-            FP.pipe(
-                History.getCurrent<UseCase.Page>,
-                History.getLast,
-                ({ noteId }) => noteId,
-            )(history),
-        )
+        Loader.map(state, ({ history }) => History.getLast(History.getCurrent(history))),
     );
 
     return <LoaderJSX.Show loadable={loadableNotes}>{notes =>
