@@ -6,7 +6,7 @@ type Props = {
 	addParagraph: JSX.Element;
 }
 
-export function MainLayout({ router, noteList, paragraphList, addNote, addParagraph }: Props) {
+export function Main({ router, noteList, paragraphList, addNote, addParagraph }: Props) {
 	return <div className="flex">
 		<aside>
 			{noteList}

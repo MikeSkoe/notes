@@ -44,6 +44,10 @@ export function setPosition(t: T, position: number, parent: Note.T["id"]): T {
     }
 }
 
+export function setTitle(t: T, title: string): T {
+    return {...t, title };
+}
+
 export function getNextPosition(paragraphs: T[], parent: Note.T["id"]): number {
     const STEP = 100;
     const largestPosition = paragraphs

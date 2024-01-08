@@ -7,6 +7,8 @@ export interface Actions {
     selectNote: (_: [Note.T["id"], boolean]) => void;
     addNote: (_: string) => void;
     addParagraph: (_: string) => void;
+    updateParagraph: (_: Paragraph.T) => void;
+    startEditingParagraph: (_: Paragraph.T["id"]) => void;
     deleteParagraph: (_: Paragraph.T["id"]) => void;
     linkParagraphToNote: (_: [Paragraph.T["id"], Note.T["id"]]) => void;
     back: (_: void) => void;
@@ -37,6 +39,8 @@ export function make(
     UseCase.onLinkParagraphToNote(app$, selectedNote$, paragraphService);
     UseCase.onSelectNote(noteService, paragraphService);
     UseCase.onRoute(app$);
+    UseCase.onUpdateParagraph(app$, paragraphService);
+    UseCase.onStartEditing(app$);
 
     return {
         store: app$,
@@ -45,6 +49,8 @@ export function make(
             selectNote: UseCase.selectNote,
             addNote: UseCase.addNote,
             addParagraph: UseCase.initParagraph,
+            startEditingParagraph: UseCase.startEditingParagraph,
+            updateParagraph: UseCase.updateParagraph,
             deleteParagraph: UseCase.deleteParagraph,
             linkParagraphToNote: UseCase.linkParagraphToNote,
             back: UseCase.back,

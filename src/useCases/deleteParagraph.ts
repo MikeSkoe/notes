@@ -37,11 +37,11 @@ export function onDeleteParagraph(
                 {} as Record<Paragraph.T["id"], Paragraph.T>,
             ),
             notesParagraphs: Object.keys(state.notesParagraphs).reduce(
-                (acc: Loader.Unwrap<Root>["notesParagraphs"], noteId: Note.T["id"]) => ({
+                (acc, noteId) => ({
                     ...acc,
                     [noteId]: state.notesParagraphs[noteId].filter(paragraphId => paragraphId !== id),
                 }),
-                {},
+                {} as Record<Note.T["id"], Paragraph.T["id"][]>,
             ),
         }));
     }

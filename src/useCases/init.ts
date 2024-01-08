@@ -40,6 +40,7 @@ export function onLoaded(
             notesParagraphs: {
                 [noteId]: paragraphs.map(({ id }) => id),
             },
+            editParagraph: Paragraph.EMPTY.id,
         });
     }
 
@@ -57,7 +58,8 @@ export function onLoaded(
             notesParagraphs: {
                 ...state.notesParagraphs,
                 [noteId]: paragraphs.map(({ id }) => id),
-            }
+            },
+            editParagraph: Paragraph.EMPTY.id,
         }));
     }
 

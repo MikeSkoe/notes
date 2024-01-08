@@ -7,8 +7,21 @@ import { Root } from "./root";
 // Add paragraph
 
 export const initParagraph = createEvent<string>();
+export const updateParagraph = createEvent<Paragraph.T>();
 export const addParagraph = createEvent<Paragraph.T>();
 export const updateParagraphs = createEvent<Paragraph.T[]>();
+export const startEditingParagraph = createEvent<Paragraph.T["id"]>();
+
+export function onStartEditing(store: Store<Root>) {
+    store.on(startEditingParagraph, reducer);
+
+    function reducer(root: Root, editParagraph: Paragraph.T["id"]): Root {
+        return Loader.map(root, state => ({
+            ...state,
+            editParagraph,
+        }));
+    }
+}
 
 export function onAddParagraph(
     store: Store<Root>,
@@ -69,6 +82,42 @@ export function onAddParagraph(
         addParagraph(newParagraph);
         await paragraphService.set(newParagraph);
         updateParagraphs(await paragraphService.getByParentId(noteId));
+    }
+}
+
+export function onUpdateParagraph(
+    store: Store<Root>,
+    paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
+) {
+    store.on(updateParagraph, reducer);
+
+    sample({
+        clock: updateParagraph,
+        target: createEffect(effect),
+    });
+
+    async function effect(paragraph: Paragraph.T) {
+        if (paragraph.title === "") {
+            return;
+        }
+        const currentParagraph = await paragraphService.get(paragraph.id);
+
+        if (currentParagraph.title === paragraph.title) {
+            return;
+        }
+
+        await paragraphService.set(paragraph);
+    }
+
+    function reducer(root: Root, paragraph: Paragraph.T): Root | void {
+        return Loader.map(root, state => ({
+            ...state,
+            paragraphs:{
+                ...state.paragraphs,
+                [paragraph.id]: paragraph,
+            },
+            editParagraph: Paragraph.EMPTY.id,
+        }));
     }
 }
 

@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
+import { useStoreMap } from "effector-react";
 
-import { NoteJSX, Option, Paragraph, Store } from "../..";
+import { Loader, NoteJSX, Option, Paragraph, Store } from "../..";
 
 import { T } from "..";
-
-type Props = { paragraph: T; }
+import { Edit } from "./edit";
 
 type LinkProps = { paragraph: Paragraph.T; }
 
@@ -37,12 +37,34 @@ function Link({ paragraph }: LinkProps) {
     </button>;
 }
 
-export function Item({ paragraph }: Props) {
+type Props = { id: T["id"]; }
+
+export function Item({ id }: Props) {
     const actions = useContext(Store.ActionContext);
+    const store = useContext(Store.StoreContext);
+    const paragraph = useStoreMap({
+        store,
+        fn: state => Loader.getMapWithDefault(
+            state,
+            ({ paragraphs }) => paragraphs[id],
+            Paragraph.EMPTY,
+        ),
+        keys: [id],
+    });
+    const editParagraph = useStoreMap(store, state => Loader.getMapWithDefault(
+        state,
+        ({ editParagraph }) => editParagraph,
+        Paragraph.EMPTY.id,
+    ));
+
+    if (editParagraph === id) {
+        return <Edit id={id} />;
+    }
 
     return <li>
-        {paragraph.title}
-        <br />
+        <p style={{ whiteSpace: "pre" }} onClick={() => actions.startEditingParagraph(paragraph.id)}>
+            {paragraph.title}
+        </p>
         <Link paragraph={paragraph} />
         <button onClick={() => actions.deleteParagraph(paragraph.id)}>
             delete
