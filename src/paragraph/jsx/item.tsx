@@ -54,10 +54,10 @@ export function Item({ id }: Props) {
     const editParagraph = useStoreMap(store, state => Loader.getMapWithDefault(
         state,
         ({ editParagraph }) => editParagraph,
-        Paragraph.EMPTY.id,
+        Option.none(),
     ));
 
-    if (editParagraph === id) {
+    if (Option.isSome(editParagraph) && Option.getWithDefault(editParagraph, Paragraph.EMPTY.id) === id) {
         return <Edit id={id} />;
     }
 

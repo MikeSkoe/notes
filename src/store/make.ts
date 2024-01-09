@@ -1,6 +1,6 @@
 import { Store, createStore } from "effector";
 
-import { Loader, Note, Paragraph, History, Service, UseCase } from "..";
+import { Loader, Note, Paragraph, History, Service, UseCase, Option } from "..";
 
 export interface Actions {
     init: () => void;
@@ -9,6 +9,7 @@ export interface Actions {
     addParagraph: (_: string) => void;
     updateParagraph: (_: Paragraph.T) => void;
     startEditingParagraph: (_: Paragraph.T["id"]) => void;
+    cancelEditingParagraph: (_: void) => void;
     deleteParagraph: (_: Paragraph.T["id"]) => void;
     linkParagraphToNote: (_: [Paragraph.T["id"], Note.T["id"]]) => void;
     back: (_: void) => void;
@@ -23,7 +24,6 @@ export function make(
     actions: Actions,
 } {
     const app$ = createStore(UseCase.EMPTY);
-
     const selectedNote$ = app$.map(
         state => Loader.getWithDefault(
             Loader.map(state, ({ history }) => History.getLast(History.getCurrent(history))),
@@ -50,6 +50,7 @@ export function make(
             addNote: UseCase.addNote,
             addParagraph: UseCase.initParagraph,
             startEditingParagraph: UseCase.startEditingParagraph,
+            cancelEditingParagraph: UseCase.cancelEditingParagraph,
             updateParagraph: UseCase.updateParagraph,
             deleteParagraph: UseCase.deleteParagraph,
             linkParagraphToNote: UseCase.linkParagraphToNote,

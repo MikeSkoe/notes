@@ -21,10 +21,10 @@ export function isNone<A>(t: T<A>): t is None<A> {
     return t.status === "none";
 }
 
-export function map<A, B>(t: T<A>, fn: (a: A) => B): T<B> {
-    if (isNone(t)) {
-        return t;
-    }
+export function getWithDefault<A>(t: T<A>, fallback: A): A {
+    return isNone(t) ? fallback : t.data;
+}
 
-    return some(fn(t.data));
+export function map<A, B>(t: T<A>, fn: (a: A) => B): T<B> {
+    return isNone(t) ? t : some(fn(t.data));
 }

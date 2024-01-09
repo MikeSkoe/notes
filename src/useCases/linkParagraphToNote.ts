@@ -2,10 +2,8 @@ import { createEffect, createEvent, sample, Store, Unit } from "effector";
 
 import { Loader, Note, Paragraph, Service } from "..";
 
-import { updateParagraphs } from "./addParagraph";
 import { Root } from "./root";
-
-// Make a paragraph link to another note
+import { updateParagraphs } from "./updateParagraphs";
 
 export const linkParagraphToNote = createEvent<[Paragraph.T["id"], Note.T["id"]]>();
 

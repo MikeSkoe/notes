@@ -4,8 +4,6 @@ import { Service, Note } from "..";
 
 import { initialLoaded } from "./init";
 
-// Add new note
-
 export const addNote = createEvent<string>();
 
 export function onAddNote(noteService: Service.Service<Note.T>) {

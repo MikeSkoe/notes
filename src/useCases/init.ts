@@ -1,10 +1,8 @@
 import { createEffect, createEvent, sample, Store } from "effector";
 
-import { Service, Note, Paragraph, Loader, History } from "..";
+import { Service, Note, Paragraph, Loader, History, Option } from "..";
 
 import { Root } from "./root";
-
-// Initialize the application
 
 export const init = createEvent();
 export const initialLoaded = createEvent<[Note.T["id"], Note.T[], Paragraph.T[]]>();
@@ -40,7 +38,7 @@ export function onLoaded(
             notesParagraphs: {
                 [noteId]: paragraphs.map(({ id }) => id),
             },
-            editParagraph: Paragraph.EMPTY.id,
+            editParagraph: Option.none(),
         });
     }
 
@@ -59,16 +57,16 @@ export function onLoaded(
                 ...state.notesParagraphs,
                 [noteId]: paragraphs.map(({ id }) => id),
             },
-            editParagraph: Paragraph.EMPTY.id,
+            editParagraph: Option.none(),
         }));
     }
 
     async function effect() {
-            const [notes, paragraphs] = await Promise.all([
-                noteService.getAll(),
-                paragraphService.getByParentId(Note.UNSORTED.id),
-            ]);
+        const [notes, paragraphs] = await Promise.all([
+            noteService.getAll(),
+            paragraphService.getByParentId(Note.UNSORTED.id),
+        ]);
 
-            initialLoaded([Note.UNSORTED.id, notes, paragraphs]);
-        }
+        initialLoaded([Note.UNSORTED.id, notes, paragraphs]);
+    }
 }

@@ -4,8 +4,6 @@ import { Note, Paragraph, Service } from "..";
 
 import { initialLoaded, pageLoaded } from "./init";
 
-// Select a note
-
 export const selectNote = createEvent<[Note.T["id"], boolean]>();
 
 export function onSelectNote(

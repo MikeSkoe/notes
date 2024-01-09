@@ -15,14 +15,19 @@ export function Edit({ id }: Props) {
     ));
     const [paragraph, setParagraph] = useState(initialParagraph);
 
-    return <textarea
-        onKeyDown={event => {
-            if (event.key === "Enter" && event.metaKey) {
-                actions.updateParagraph(paragraph);
-            }
-        }}
-        onChange={event => setParagraph(p => Paragraph.setTitle(p, event.target.value))}
-        value={paragraph.title}
-        placeholder="Enter your markdown here..."
-    />;
+    return <div>
+        <textarea
+            onKeyDown={event => {
+                if (event.key === "Enter" && event.metaKey) {
+                    actions.updateParagraph(paragraph);
+                }
+            }}
+            onChange={event => setParagraph(p => Paragraph.setTitle(p, event.target.value))}
+            value={paragraph.title}
+            placeholder="Enter your markdown here..."
+        />
+        <button onClick={() => actions.cancelEditingParagraph()}>
+            cancel
+        </button>
+    </div>;
 }

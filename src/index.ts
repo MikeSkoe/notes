@@ -1,6 +1,3 @@
-// Auxiliary UI
-export * as Input from "./input";
-
 // Utils
 export * as FP from "./fp";
 export * as Option from "./option";

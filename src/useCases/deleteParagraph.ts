@@ -2,10 +2,8 @@ import { Unit, createEffect, sample, createEvent, Store } from "effector";
 
 import { Loader, Note, Paragraph, Service } from "..";
 
-import { updateParagraphs } from "./addParagraph";
 import { Root } from "./root";
-
-// Delete paragraph
+import { updateParagraphs } from "./updateParagraphs";
 
 export const deleteParagraph = createEvent<Paragraph.T["id"]>();
 

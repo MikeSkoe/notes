@@ -3,25 +3,10 @@ import { createEffect, sample, createEvent, Store } from "effector";
 import { Service, Loader, Note, Paragraph, History, FP } from "..";
 
 import { Root } from "./root";
-
-// Add paragraph
+import { updateParagraphs } from "./updateParagraphs";
 
 export const initParagraph = createEvent<string>();
-export const updateParagraph = createEvent<Paragraph.T>();
 export const addParagraph = createEvent<Paragraph.T>();
-export const updateParagraphs = createEvent<Paragraph.T[]>();
-export const startEditingParagraph = createEvent<Paragraph.T["id"]>();
-
-export function onStartEditing(store: Store<Root>) {
-    store.on(startEditingParagraph, reducer);
-
-    function reducer(root: Root, editParagraph: Paragraph.T["id"]): Root {
-        return Loader.map(root, state => ({
-            ...state,
-            editParagraph,
-        }));
-    }
-}
 
 export function onAddParagraph(
     store: Store<Root>,
@@ -85,60 +70,3 @@ export function onAddParagraph(
     }
 }
 
-export function onUpdateParagraph(
-    store: Store<Root>,
-    paragraphService: Service.RelationalService<Note.T, Paragraph.T>,
-) {
-    store.on(updateParagraph, reducer);
-
-    sample({
-        clock: updateParagraph,
-        target: createEffect(effect),
-    });
-
-    async function effect(paragraph: Paragraph.T) {
-        if (paragraph.title === "") {
-            return;
-        }
-        const currentParagraph = await paragraphService.get(paragraph.id);
-
-        if (currentParagraph.title === paragraph.title) {
-            return;
-        }
-
-        await paragraphService.set(paragraph);
-    }
-
-    function reducer(root: Root, paragraph: Paragraph.T): Root | void {
-        return Loader.map(root, state => ({
-            ...state,
-            paragraphs:{
-                ...state.paragraphs,
-                [paragraph.id]: paragraph,
-            },
-            editParagraph: Paragraph.EMPTY.id,
-        }));
-    }
-}
-
-export function onUpdateParagraphs(store: Store<Root>) {
-    store.on(updateParagraphs, reducer);
-
-    function reducer(root: Root, paragraphs: Paragraph.T[]): Root {
-        return Loader.map(root, state => {
-            const noteId = History.getLast(History.getCurrent(state.history));
-
-            return {
-                ...state,
-                paragraphs: paragraphs.reduce(
-                    (acc, paragraph) => ({ ...acc, [paragraph.id]: paragraph }),
-                    state.paragraphs,
-                ),
-                notesParagraphs: {
-                    ...state.notesParagraphs,
-                    [noteId]: paragraphs.map(({ id }) => id),
-                }
-            }
-        });
-    }
-}

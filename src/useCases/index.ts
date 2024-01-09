@@ -5,4 +5,7 @@ export * from "./addParagraph";
 export * from "./deleteParagraph";
 export * from "./selectNote";
 export * from "./linkParagraphToNote";
+export * from "./editParagraph";
 export * from "./router";
+export * from "./updateParagraph";
+export * from "./updateParagraphs";
