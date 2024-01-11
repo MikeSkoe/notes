@@ -6,9 +6,12 @@ import { Loader, NoteJSX, Option, Paragraph, Store } from "../..";
 import { T } from "..";
 import { Edit } from "./edit";
 
-type LinkProps = { paragraph: Paragraph.T; }
+type LinkProps = {
+    paragraph: Paragraph.T;
+    forward: boolean;
+}
 
-function Link({ paragraph }: LinkProps) {
+function Link({ paragraph, forward }: LinkProps) {
     const actions = useContext(Store.ActionContext);
     const [linkSelection, setLinkSelection] = useState(false);
 
@@ -16,7 +19,7 @@ function Link({ paragraph }: LinkProps) {
         return <button
             onClick={() => {
                 if (Option.isSome(paragraph.noteLink)) {
-                    actions.selectNote([paragraph.noteLink.data, false]);
+                    actions.selectNote([paragraph.noteLink.data, false, forward]);
                 }
             }}
         >
@@ -37,9 +40,12 @@ function Link({ paragraph }: LinkProps) {
     </button>;
 }
 
-type Props = { id: T["id"]; }
+type Props = {
+    id: T["id"];
+    forward: boolean;
+}
 
-export function Item({ id }: Props) {
+export function Item({ id, forward }: Props) {
     const actions = useContext(Store.ActionContext);
     const store = useContext(Store.StoreContext);
     const paragraph = useStoreMap({
@@ -65,7 +71,7 @@ export function Item({ id }: Props) {
         <p style={{ whiteSpace: "pre" }} onClick={() => actions.startEditingParagraph(paragraph.id)}>
             {paragraph.title}
         </p>
-        <Link paragraph={paragraph} />
+        <Link paragraph={paragraph} forward={forward} />
         <button onClick={() => actions.deleteParagraph(paragraph.id)}>
             delete
         </button>

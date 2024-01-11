@@ -4,7 +4,7 @@ import { Note, Paragraph, Service } from "..";
 
 import { initialLoaded, pageLoaded } from "./init";
 
-export const selectNote = createEvent<[Note.T["id"], boolean]>();
+export const selectNote = createEvent<[Note.T["id"], boolean, boolean]>();
 
 export function onSelectNote(
     noteService: Service.Service<Note.T>,
@@ -15,13 +15,13 @@ export function onSelectNote(
         target: createEffect(effect),
     });
 
-    async function effect([noteId, force]: [Note.T["id"], boolean]) {
+    async function effect([noteId, force, forward]: [Note.T["id"], boolean, boolean]) {
         const paragraphs = await paragraphService.getByParentId(noteId);
 
         if (force) {
             initialLoaded([noteId, await noteService.getAll(), paragraphs]);
         } else {
-            pageLoaded([noteId, paragraphs]);
+            pageLoaded([noteId, paragraphs, forward]);
         }
     }
 }

@@ -29,20 +29,13 @@ export function onAddParagraph(
             return;
         }
 
-        return Loader.map(root, state => {
-            const noteId = History.getLast(History.getCurrent(state.history));
-            return {
-                ...state,
-                paragraphs: {
-                    ...state.paragraphs,
-                    [newParagraph.id]: newParagraph,
-                },
-                notesParagraphs: {
-                    ...state.notesParagraphs,
-                    [noteId]: state.notesParagraphs[noteId].concat(newParagraph.id),
-                },
-            };
-        });
+        return Loader.map(root, state => ({
+            ...state,
+            paragraphs: {
+                ...state.paragraphs,
+                [newParagraph.id]: newParagraph,
+            },
+        }));
     }
 
     async function effect([root, title]: [Root, string]) {
@@ -55,12 +48,9 @@ export function onAddParagraph(
             History.getLast,
         )(root.data.history);
 
-        const noteParagraphs = root.data.notesParagraphs[noteId]
-            .map(paragraphId => root.data.paragraphs[paragraphId]);
-
         const newParagraph = Paragraph.setPosition(
             Paragraph.make(title),
-            Paragraph.getNextPosition(noteParagraphs, noteId),
+            Paragraph.getNextPosition(await paragraphService.getByParentId(noteId), noteId),
             noteId,
         );
 

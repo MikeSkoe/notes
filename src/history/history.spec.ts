@@ -9,7 +9,7 @@ describe("history", () => {
 		)).toEqual(["A"]);
 
 		expect(getCurrent(
-			add(make("A"), "B")
+			add(make("A"), "B", true)
 		)).toEqual(["A", "B"]);
 
 		expect(getCurrent(
@@ -25,7 +25,7 @@ describe("history", () => {
 		expect(getCurrent(
 			FP.pipe(
 				back,
-			)(add(make("A"), "B"))
+			)(add(make("A"), "B", true))
 		)).toEqual(["A", "B"]);
 
 		expect(getCurrent(
@@ -60,7 +60,7 @@ describe("history", () => {
 		expect(getCurrent(
 			FP.pipe(
 				front,
-			)(add(make("A"), "B"))
+			)(add(make("A"), "B", true))
 		)).toEqual(["B"]);
 
 		expect(getCurrent(
@@ -83,11 +83,11 @@ describe("history", () => {
 
 	it("should slice history if append at the middle", () => {
 		expect(getCurrent(
-			add(back(append(make("A"), ["B", "C", "D"])), "X")
+			add(back(append(make("A"), ["B", "C", "D"])), "X", true)
 		)).toEqual(["C", "X"]);
 
 		expect(getCurrent(
-			add(back(back(append(make("A"), ["B", "C", "D"]))), "X")
+			add(back(back(append(make("A"), ["B", "C", "D"]))), "X", true)
 		)).toEqual(["B", "X"]);
 	})
 });

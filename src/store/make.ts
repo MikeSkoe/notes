@@ -1,10 +1,11 @@
 import { Store, createStore } from "effector";
+import { debug } from "patronum";
 
-import { Loader, Note, Paragraph, History, Service, UseCase, Option } from "..";
+import { Loader, Note, Paragraph, History, Service, UseCase } from "..";
 
 export interface Actions {
     init: () => void;
-    selectNote: (_: [Note.T["id"], boolean]) => void;
+    selectNote: (_: [Note.T["id"], boolean, boolean]) => void;
     addNote: (_: string) => void;
     addParagraph: (_: string) => void;
     updateParagraph: (_: Paragraph.T) => void;
@@ -30,6 +31,9 @@ export function make(
             Note.UNSORTED.id,
         ),
     );
+
+    const history$ = app$.map(state => Loader.getMapWithDefault(state, ({ history }) => history, History.make("")));
+    debug(history$);
 
     UseCase.onLoaded(app$, noteService, paragraphService);
     UseCase.onAddParagraph(app$, paragraphService);

@@ -26,14 +26,14 @@ export function getLast<A>(a: Current<A>): A {
 	return a[a.length - 1];
 }
 
-export function add<A>({ history, pointer }: T<A>, a: A): T<A> {
-	const newHistory = history.slice(0, pointer + 2).concat(a);
+export function add<A>({ history, pointer }: T<A>, a: A, forward: boolean): T<A> {
+	const shift = forward ? 1 : 0;
+	const newPointer = Math.min(history.length - 1, pointer + shift);
+	const newHistory = history.slice(0, newPointer + 1).concat(a);
 
 	return {
 		history: newHistory,
-		pointer: Math.max(0, Math.min(newHistory.length - 2,
-			pointer + 1,
-		)),
+		pointer: newPointer,
 	};
 }
 
@@ -58,7 +58,7 @@ export function update<A>({ history, pointer }: T<A>, fn: (a: A) => A): T<A> {
 }
 
 export function append<A>(t: T<A>, as: A[]): T<A> {
-	return as.reduce((acc, a) => add(acc, a), t);
+	return as.reduce((acc, a) => add(acc, a, true), t);
 }
 
 export function back<A>({ history, pointer }: T<A>): T<A> {

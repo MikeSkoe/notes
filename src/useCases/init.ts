@@ -6,7 +6,7 @@ import { Root } from "./root";
 
 export const init = createEvent();
 export const initialLoaded = createEvent<[Note.T["id"], Note.T[], Paragraph.T[]]>();
-export const pageLoaded = createEvent<[Note.T["id"], Paragraph.T[]]>();
+export const pageLoaded = createEvent<[Note.T["id"], Paragraph.T[], boolean]>();
 
 export function onLoaded(
     store: Store<Root>,
@@ -35,28 +35,21 @@ export function onLoaded(
                 {} as Record<Paragraph.T["id"], Paragraph.T>,
             ),
             history: History.make(noteId),
-            notesParagraphs: {
-                [noteId]: paragraphs.map(({ id }) => id),
-            },
             editParagraph: Option.none(),
         });
     }
 
     function pageLoadedReducer(
         root: Root,
-        [noteId, paragraphs]: [Note.T["id"], Paragraph.T[]],
+        [noteId, paragraphs, forward]: [Note.T["id"], Paragraph.T[], boolean],
     ): Root {
         return Loader.map(root, state => ({
             notes: state.notes,
-            history: History.add(state.history, noteId),
+            history: History.add(state.history, noteId, forward),
             paragraphs: paragraphs.reduce(
                 (acc, paragraph) => ({...acc, [paragraph.id]: paragraph }),
                 state.paragraphs,
             ),
-            notesParagraphs: {
-                ...state.notesParagraphs,
-                [noteId]: paragraphs.map(({ id }) => id),
-            },
             editParagraph: Option.none(),
         }));
     }
