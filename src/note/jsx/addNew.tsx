@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 
 import { Store } from "../..";
 
-export function addNew() {
+export function AddNew() {
 	const actions = useContext(Store.ActionContext);
 	const [title, setTitle] = useState("");
 

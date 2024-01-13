@@ -1,5 +1,4 @@
 import { Store, createStore } from "effector";
-import { debug } from "patronum";
 
 import { Loader, Note, Paragraph, History, Service, UseCase } from "..";
 
@@ -31,9 +30,6 @@ export function make(
             Note.UNSORTED.id,
         ),
     );
-
-    const history$ = app$.map(state => Loader.getMapWithDefault(state, ({ history }) => history, History.make("")));
-    debug(history$);
 
     UseCase.onLoaded(app$, noteService, paragraphService);
     UseCase.onAddParagraph(app$, paragraphService);

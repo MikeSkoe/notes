@@ -5,6 +5,7 @@ import { Service, Note, Paragraph, UseCase } from "..";
 
 import { make, Actions } from "./make";
 
+// mock
 const newNote = Note.make("111");
 
 // mock
@@ -38,7 +39,7 @@ export function Provider({
     store = myStore,
     actions = myActions,
 }: Props) {
-    useEffect(() => void actions.init());
+    useEffect(() => void actions.init(), []);
 
     return <StoreContext.Provider value={store}>
         <ActionContext.Provider value={actions}>

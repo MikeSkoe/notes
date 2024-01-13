@@ -14,7 +14,7 @@ test("Add new note", async () => {
    const { getByText, getByRole } = render(
       <Store.Provider store={store} actions={actions}>
          <NoteJSX.List />
-         <NoteJSX.addNew />
+         <NoteJSX.AddNew />
       </Store.Provider>
    );
 

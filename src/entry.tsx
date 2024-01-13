@@ -12,7 +12,7 @@ createRoot(document.getElementById('root')!)
                 router={<HistoryJSX.Router />}
                 noteList={<NoteJSX.List />}
                 paragraphList={<ParagraphJSX.List />}
-                addNote={<NoteJSX.addNew />}
+                addNote={<NoteJSX.AddNew />}
                 addParagraph={<ParagraphJSX.AddNew />}
             />
         </Store.Provider>
